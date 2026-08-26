@@ -18,71 +18,106 @@
   #reader.active { display: flex; }
 
   /* ---- ANA SAYFA ---- */
-  #home { background: #faf7f0; color: #241f18; min-height: 100vh; padding: 18px 20px 90px; max-width: 480px; margin: 0 auto; }
+  #home {
+    background-color: #ece0c4;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.35), transparent 55%),
+      radial-gradient(ellipse at 85% 90%, rgba(120,95,55,0.18), transparent 50%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><path d='M20 40 Q80 10 140 60 T260 50' stroke='rgba(90,70,40,0.10)' stroke-width='1.5' fill='none'/><path d='M10 150 Q90 120 160 170 T280 160' stroke='rgba(90,70,40,0.08)' stroke-width='1.2' fill='none'/><path d='M30 240 Q100 210 180 250 T270 230' stroke='rgba(90,70,40,0.09)' stroke-width='1.3' fill='none'/></svg>");
+    background-size: cover, cover, 340px 340px;
+    color: #241f18; min-height: 100vh; padding: 18px 20px 90px; max-width: 480px; margin: 0 auto;
+  }
   .top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
   .brand { display: flex; align-items: center; gap: 8px; }
   .logo-circle {
-    width: 30px; height: 30px; border-radius: 50%;
-    background: #1e4d3e; display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #f2e9d2; border: 1.5px solid #a6772c;
+    display: flex; align-items: center; justify-content: center;
   }
-  .logo-circle svg { width: 16px; height: 16px; }
-  .brand-name { font-family: Georgia, serif; font-size: 15px; color: #6b5f4c; }
+  .logo-circle svg { width: 18px; height: 18px; }
+  .brand-name { font-family: Georgia, serif; font-size: 16px; color: #5a4a30; font-weight: 700; }
   .icon-btn { width: 20px; height: 20px; opacity: 0.55; }
 
   .page-heading { font-family: Georgia, serif; font-size: 34px; font-weight: 700; color: #1a160f; margin-bottom: 20px; }
 
-  .tabs { display: flex; gap: 26px; border-bottom: 1px solid #e6ddc9; margin-bottom: 20px; }
+  .tabs { display: flex; gap: 4px; border-bottom: 2px solid rgba(90,70,40,0.25); margin-bottom: 22px; position: relative; }
   .tab-item {
-    font-size: 16px; font-weight: 700; color: #b3a891; padding-bottom: 12px;
-    border-bottom: 2px solid transparent; cursor: pointer; font-family: Georgia, serif;
+    font-size: 16px; font-weight: 700; color: #8a7a5c; padding: 10px 16px 12px;
+    cursor: pointer; font-family: Georgia, serif; position: relative; z-index: 1;
   }
-  .tab-item.active { color: #1a160f; border-bottom-color: #a6772c; }
+  .tab-item.active {
+    color: #1a160f;
+    background: #f6eed7;
+    clip-path: polygon(0% 0%, 100% 0%, 97% 55%, 100% 100%, 3% 100%, 0% 45%);
+    margin-bottom: -2px; padding-bottom: 14px;
+  }
 
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
   .featured {
-    background: #dfe4d8; border-radius: 14px; padding: 14px;
-    display: flex; gap: 14px; align-items: center; margin-bottom: 26px; cursor: pointer;
+    background: linear-gradient(155deg, #ece0c8, #ddcda3);
+    border: 1px solid rgba(90,70,40,0.2);
+    border-radius: 10px; padding: 14px;
+    display: flex; gap: 16px; align-items: center; margin-bottom: 30px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(60,45,20,0.12);
   }
   .cover-thumb {
-    width: 64px; height: 88px; border-radius: 4px; flex-shrink: 0;
+    width: 68px; height: 96px; border-radius: 3px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center; text-align: center;
-    padding: 8px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+    padding: 10px 8px; position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.15);
+    border-left: 5px solid rgba(0,0,0,0.28);
   }
-  .cover-thumb span { font-family: Georgia, serif; font-weight: 700; font-size: 12px; line-height: 1.25; color: #fff; }
+  .cover-thumb::before {
+    content: ''; position: absolute; inset: 5px;
+    border: 1px solid rgba(230,205,140,0.55);
+    pointer-events: none;
+  }
+  .cover-thumb .corner { position: absolute; width: 10px; height: 10px; border: 1.5px solid rgba(230,205,140,0.75); }
+  .cover-thumb .corner.tl { top: 4px; left: 4px; border-right: none; border-bottom: none; }
+  .cover-thumb .corner.tr { top: 4px; right: 4px; border-left: none; border-bottom: none; }
+  .cover-thumb .corner.bl { bottom: 4px; left: 4px; border-right: none; border-top: none; }
+  .cover-thumb .corner.br { bottom: 4px; right: 4px; border-left: none; border-top: none; }
+  .cover-thumb span { font-family: Georgia, serif; font-weight: 700; font-size: 12px; line-height: 1.3; color: #f5ecd6; letter-spacing: 0.02em; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
   .featured-info { flex: 1; min-width: 0; }
-  .featured-info .f-title { font-family: Georgia, serif; font-size: 16px; font-weight: 700; color: #1a160f; line-height: 1.3; margin-bottom: 6px; }
-  .featured-info .f-meta { font-size: 12px; color: #5d6b52; }
-  .featured-info .f-progress { font-size: 11px; font-weight: 700; letter-spacing: 0.03em; color: #43522f; margin-top: 8px; }
+  .featured-info .f-title { font-family: Georgia, serif; font-size: 17px; font-weight: 700; color: #1a160f; line-height: 1.3; margin-bottom: 6px; }
+  .featured-info .f-meta { font-size: 12px; color: #6b5a3e; }
+  .featured-info .f-progress { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: #7a5a1f; margin-top: 8px; }
 
-  .section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .section-title { font-family: Georgia, serif; font-size: 21px; font-weight: 700; color: #1a160f; }
+  .section-title-italic { font-family: Georgia, serif; font-size: 23px; font-style: italic; font-weight: 400; color: #1a160f; }
   .section-chevron { width: 18px; height: 18px; opacity: 0.4; }
 
-  .cover-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 26px; }
-  .cover-card { cursor: pointer; }
-  .cover-card .cover-thumb { width: 100%; height: 130px; margin-bottom: 8px; }
+  .cover-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 26px; }
+  .cover-card { cursor: pointer; padding-left: 6px; }
+  .cover-card .cover-thumb { width: 100%; height: 138px; margin-bottom: 10px; border-left-width: 6px; }
+  .cover-card .cover-thumb::after {
+    content: ''; position: absolute; top: 3px; bottom: -3px; right: -5px; width: 5px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.3));
+    box-shadow: 2px 0 0 rgba(0,0,0,0.12);
+  }
   .cover-card .c-title { font-size: 13px; font-weight: 700; color: #1a160f; line-height: 1.3; margin-bottom: 2px; }
-  .cover-card .c-meta { font-size: 11px; color: #8a7e68; }
+  .cover-card .c-meta { font-size: 11px; color: #7a6a4a; }
 
   .filter-row { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; }
   .filter-chip {
     font-size: 12px; padding: 6px 13px; border-radius: 20px; white-space: nowrap;
-    border: 1px solid #e6ddc9; color: #6b5f4c; flex-shrink: 0; cursor: pointer;
+    border: 1px solid rgba(90,70,40,0.3); color: #6b5a3e; flex-shrink: 0; cursor: pointer;
   }
-  .filter-chip.active { background: #1a160f; color: #faf7f0; border-color: #1a160f; }
+  .filter-chip.active { background: #2a2114; color: #f6eed7; border-color: #2a2114; }
 
   .tabbar {
     position: fixed; bottom: 0; left: 0; right: 0;
-    background: #faf7f0; border-top: 1px solid #e6ddc9;
+    background: #f2e9d2; border-top: 1px solid rgba(90,70,40,0.25);
     display: flex; justify-content: space-around; padding: 10px 0 max(10px, env(safe-area-inset-bottom));
     max-width: 480px; margin: 0 auto;
   }
-  .tab-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; opacity: 0.45; }
+  .tab-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0.55; color: #5a4a30; }
   .tab-nav-item.active { opacity: 1; color: #a6772c; }
-  .tab-nav-item svg { width: 22px; height: 22px; }
-  .tab-nav-item span { font-size: 10px; font-weight: 700; }
+  .tab-nav-item svg { width: 23px; height: 23px; }
+  .tab-nav-item span { font-size: 10px; font-weight: 700; font-family: Georgia, serif; }
 
 
   /* ---- OKUMA / TAM EKRAN KİTAP ---- */
@@ -153,7 +188,7 @@
   <div class="top-row">
     <div class="brand">
       <div class="logo-circle">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 6 L12 18 Q9 16.5 6 17 L6 7.5 Q9 6.2 12 6 Z" fill="#faf5e8"/><path d="M12 6 L12 18 Q15 16.5 18 17 L18 7.5 Q15 6.2 12 6 Z" fill="#faf5e8" opacity="0.85"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#a6772c" stroke-width="1.6"><path d="M3 5c2-1 5-1 7 0v14c-2-1-5-1-7 0V5Z"/><path d="M21 5c-2-1-5-1-7 0v14c2-1 5-1 7 0V5Z"/></svg>
       </div>
       <span class="brand-name">Mütalaa</span>
     </div>
@@ -170,6 +205,7 @@
   <div id="panel-bugun" class="tab-panel active">
     <div class="featured" onclick="openReader('eyyub')">
       <div class="cover-thumb" style="background:linear-gradient(150deg,#1d9e75,#0f6e56);">
+        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
         <span>Hz. Eyyub'un Hikayesi</span>
       </div>
       <div class="featured-info">
@@ -180,21 +216,21 @@
     </div>
 
     <div class="section-row">
-      <span class="section-title">Bugün ayrıca okunabilir</span>
+      <span class="section-title-italic">Bugün ayrıca okunabilir</span>
     </div>
     <div class="cover-grid">
       <div class="cover-card" onclick="openReader('selman')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#d4832a,#a6772c);"><span>Selman-ı Farisi</span></div>
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#d4832a,#a6772c);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Selman-ı Farisi</span></div>
         <div class="c-title">Hakikat Peşinde</div>
         <div class="c-meta">sahabe · 8 dk</div>
       </div>
       <div class="cover-card" onclick="openReader('uveys')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#c9578a,#8a3556);"><span>Üveys el-Karani</span></div>
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#c9578a,#8a3556);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Üveys el-Karani</span></div>
         <div class="c-title">Görmeden Sevmek</div>
         <div class="c-meta">tabiin · 7 dk</div>
       </div>
       <div class="cover-card" onclick="openReader('bilal')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#3a6ea8,#1f4c7a);"><span>Bilal-i Habeşi</span></div>
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#3a6ea8,#1f4c7a);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Bilal-i Habeşi</span></div>
         <div class="c-title">Sesiyle Özgür Kalan Adam</div>
         <div class="c-meta">sahabe · 9 dk</div>
       </div>
@@ -208,58 +244,69 @@
       <span class="filter-chip">sahabe</span>
       <span class="filter-chip">tabiin</span>
       <span class="filter-chip">evliyalar</span>
+      <span class="filter-chip">Ehl-i Beyt</span>
     </div>
     <div class="section-row">
       <span class="section-title">Tüm hikayeler</span>
     </div>
     <div class="cover-grid">
       <div class="cover-card" onclick="openReader('eyyub')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#1d9e75,#0f6e56);"><span>Hz. Eyyub'un Hikayesi</span></div>
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#1d9e75,#0f6e56);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Hz. Eyyub'un Hikayesi</span></div>
         <div class="c-title">Bir yolculuğun sabrı</div>
         <div class="c-meta">peygamberler · 9 dk</div>
       </div>
       <div class="cover-card" onclick="openReader('selman')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#d4832a,#a6772c);"><span>Selman-ı Farisi</span></div>
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#d4832a,#a6772c);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Selman-ı Farisi</span></div>
         <div class="c-title">Hakikat Peşinde</div>
         <div class="c-meta">sahabe · 8 dk</div>
       </div>
       <div class="cover-card" onclick="openReader('uveys')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#c9578a,#8a3556);"><span>Üveys el-Karani</span></div>
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#c9578a,#8a3556);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Üveys el-Karani</span></div>
         <div class="c-title">Görmeden Sevmek</div>
         <div class="c-meta">tabiin · 7 dk</div>
       </div>
       <div class="cover-card" onclick="openReader('bilal')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#3a6ea8,#1f4c7a);"><span>Bilal-i Habeşi</span></div>
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#3a6ea8,#1f4c7a);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Bilal-i Habeşi</span></div>
         <div class="c-title">Sesiyle Özgür Kalan Adam</div>
         <div class="c-meta">sahabe · 9 dk</div>
       </div>
       <div class="cover-card" onclick="openReader('bayezid')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#6b5ca8,#453a7a);"><span>Bayezid-i Bistami</span></div>
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#6b5ca8,#453a7a);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Bayezid-i Bistami</span></div>
         <div class="c-title">Benlikten Geçiş</div>
         <div class="c-meta">evliyalar · 8 dk</div>
+      </div>
+      <div class="cover-card" onclick="openReader('ebueyyub')">
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#8a6a3a,#5c451f);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Ebû Eyyûb el-Ensârî</span></div>
+        <div class="c-title">Ev Sahibi Olan Sahabi</div>
+        <div class="c-meta">sahabe · 8 dk</div>
+      </div>
+      <div class="cover-card" onclick="openReader('hatice')">
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#a8395a,#6e2038);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Hz. Hatice</span></div>
+        <div class="c-title">İlk İnanan Kalp</div>
+        <div class="c-meta">Ehl-i Beyt · 9 dk</div>
       </div>
     </div>
   </div>
 
   <div class="tabbar">
     <div class="tab-nav-item active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 21V10a6 6 0 0 1 12 0v11"/><path d="M6 21h12"/><circle cx="12" cy="13" r="1"/></svg>
       <span>Ana Sayfa</span>
     </div>
     <div class="tab-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h4v16H4z"/><path d="M10 4h4v16h-4z"/><path d="M16 5l4-1 1 15-4 1z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h4v16H4z"/><path d="M10 4h4v16h-4z"/><path d="M16 5l4-1 1 15-4 1z"/></svg>
       <span>Kitaplarım</span>
     </div>
     <div class="tab-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
       <span>Ara</span>
     </div>
     <div class="tab-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C1 8 3 4 7 4c2.2 0 3.8 1.2 5 3 1.2-1.8 2.8-3 5-3 4 0 6 4 4.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 4c3-1.5 4.5 0 6 1.5C13.5 4 15 2.5 18 4v14c-3-1.5-4.5 0-6 1.5-1.5-1.5-3-3-6-1.5V4Z"/><path d="M9 8h6M9 11h6M9 14h4"/></svg>
       <span>İstek Listesi</span>
     </div>
     <div class="tab-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="7" r="3.2"/><path d="M5 21c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/></svg>
       <span>Hesap</span>
     </div>
   </div>
@@ -362,6 +409,38 @@ const stories = {
     sources: [
       "Süleyman Uludağ, \"Bâyezîd-i Bistâmî\", TDV İslâm Ansiklopedisi",
       "Semerkand Yayınları, Arifler Sultanı Bayezid-i Bistami (Ciltli); Hayatı ve Menkıbeleri"
+    ]
+  },
+  ebueyyub: {
+    title: "Ebû Eyyûb el-Ensârî: Ev Sahibi Olan Sahabi",
+    pages: [
+      "Asıl adı Hâlid b. Zeyd olan Ebû Eyyûb, Medineli Hazrec kabilesinin Neccaroğulları koluna mensuptu. Hicretten iki yıl kadar önce eşi Ümmü Eyyûb ile birlikte iman etti ve ensardan İslamiyet'i ilk kabul edenler arasına girdi.<br><br>Ama onun asıl tanındığı olay, Peygamber Efendimiz sallallahu aleyhi ve sellemin Mekke'den Medine'ye hicreti sırasında yaşandı — ve bu olay, onu tarihe 'ev sahibi sahabi' olarak geçirdi.",
+      "Medine'ye ulaşan Peygamber Efendimiz sallallahu aleyhi ve sellemin devesi, şehre girince kendiliğinden yürüdü ve bir yerde durdu. Rivayete göre Efendimiz (s.a.v.), devenin durduğu yeri bekleyip 'devenin duracağı yer, onun sahibinin evi olsun' buyurdu.<br><br>Deve, Ebû Eyyûb'un evinin önünde durdu. Böylece Peygamber Efendimiz sallallahu aleyhi ve sellem, Medine'deki ilk günlerinde Ebû Eyyûb'un evinde misafir oldu — bu, Ebû Eyyûb için hayatının en büyük şerefiydi.",
+      "Ebû Eyyûb, bu misafirliğin her anında büyük bir hassasiyet gösterdi. Rivayete göre evinin alt katını Peygamber Efendimize (s.a.v.) ayırmak istedi, ama Efendimiz üst katta kalmayı tercih etti; Ebû Eyyûb yine de O'nun üzerinde yürümekten çekindiği için geceleri evin alt katında sessizce beklerdi.<br><br>Bu küçük ayrıntı bile, sahabenin Peygamber Efendimize sallallahu aleyhi ve selleme duyduğu derin saygıyı gösterir. Ebû Eyyûb, aylarca süren bu misafirlik boyunca Efendimize her türlü hizmeti bizzat kendisi yapmaya özen gösterdi.",
+      "Peygamber Efendimiz sallallahu aleyhi ve sellem, Ebû Eyyûb ile sahabeden Mus'ab b. Umeyr arasında kardeşlik bağı (muâhât) kurdu. Ebû Eyyûb, bundan sonra Bedir, Uhud, Hendek, Hayber, Mekke'nin fethi ve Huneyn dahil, Efendimizin katıldığı bütün savaşlara katıldı.<br><br>Sağlıklı olan herkesin Allah yolunda cihada katılması gerektiğine inanırdı; bu yüzden yaşlılık döneminde bile her yıl bir seferde bulunmaya gayret etti. Bu inancı, hayatının son yıllarına kadar hiç değişmedi.",
+      "Katıldığı seferlerin sonuncusu, Müslümanların ilk İstanbul kuşatması oldu. O dönemde doksanlı yaşlarına yaklaşmıştı, ama yine de sefere katılmaktan geri durmadı. Kuşatma devam ederken hastalandı ve orada, İstanbul surlarının yakınında vefat etti.<br><br>Vasiyeti üzerine, cenazesi surlara mümkün olduğunca yakın bir yere defnedildi. Rivayete göre bu vasiyeti, Müslümanların bir gün o toprakları fethedeceğine olan inancından kaynaklanıyordu.",
+      "Yüzyıllar sonra, İstanbul'un fethi sırasında Fatih Sultan Mehmed'in hocası Akşemseddin, Ebû Eyyûb'un kabrini keşfetti; Fatih Sultan Mehmed bu kabrin üzerine bir türbe ve külliye yaptırdı. Bugün İstanbul'da 'Eyüpsultan' adıyla anılan ilçe, adını ondan alır.<br><br>Ebû Eyyûb'un hikayesi bize şunu hatırlatıyor: bazen tarihe geçen büyük bir hizmet, evinin kapısını açmak kadar sade bir davranışla başlayabilir. Onun misafirperverliği ve sadakati, asırlar sonra bile hâlâ hatırlanıyor."
+    ],
+    sources: [
+      "Hasan Güleç, \"Ebû Eyyûb el-Ensârî\", TDV İslâm Ansiklopedisi",
+      "İbn Sa'd, et-Tabakâtü'l-kübrâ",
+      "Semerkand Yayınları, Hayatü's Sahabe (4 Cilt Takım)"
+    ]
+  },
+  hatice: {
+    title: "Hz. Hatice radıyallahu anha: İlk İnanan Kalp",
+    pages: [
+      "Hatice binti Hüveylid, Mekke'nin saygın ailelerinden Benî Esed'e mensuptu. Babası Hüveylid, Mekkelilerin önemli meselelerde görüşüne başvurduğu etkili bir şahsiyetti. Hatice, dürüstlüğü ve güvenilirliğiyle şehirde tanınan başarılı bir tüccardı.<br><br>Daha önce iki evlilik yapmış, her ikisinde de eşini kaybetmişti. Kureyş'in ileri gelenlerinden pek çok evlilik teklifi aldı, ama çocuklarının terbiyesini ve ticaretini kendisi yürütebilmek için bu teklifleri kabul etmedi.",
+      "Hatice, ticaret kervanlarını yönetmek için güvenilir birine ihtiyaç duyuyordu. Kendisine tavsiye edilen genç Muhammed'in — sallallahu aleyhi ve sellem — dürüstlüğünü ve güzel ahlakını duyunca, ona bir kervan işi teklif etti. Bu kervan yolculuğu büyük bir kazançla sonuçlandı.<br><br>Hatice, onun şerefli soyu, güvenilirliği, doğru sözlülüğü ve alışverişteki dürüstlüğü sebebiyle kendisine evlenme teklif etti. Peygamber Efendimiz sallallahu aleyhi ve sellem bunu amcalarına danıştı, onların onayını aldıktan sonra evlilik gerçekleşti. Hatice o dönemde kırk, Efendimiz ise yirmi beş yaşındaydı.",
+      "Bu evlilik, Hatice radıyallahu anha vefat edinceye kadar, yaklaşık yirmi beş yıl sürdü. Peygamber Efendimiz sallallahu aleyhi ve sellem, hayatı boyunca başka bir kadınla evlenmedi ve daha sonraki eşlerinden hiçbirini Hatice'ye denk görmediğini defalarca dile getirdi.<br><br>İbrahim dışındaki bütün çocukları — Kasım, Abdullah, Zeyneb, Rukayye, Ümmü Gülsüm ve Fatıma — Hatice'den dünyaya geldi. O, Efendimizin diğer hanımları arasında kendisini peygamberlik gelmeden önce tanıyan tek eşiydi.",
+      "Peygamberlik Hira Mağarası'nda Efendimize bildirildiğinde, korku ve endişe içinde eve döndü. Hatice radıyallahu anha, onu sakinleştiren ilk kişi oldu. Ona 'Allah seni asla utandırmaz; sen akrabanı gözetir, doğru söylersin, yoksula yardım edersin, misafiri ağırlarsın' diyerek güven verdi.<br><br>Kısa süre sonra, Peygamber Efendimiz sallallahu aleyhi ve sellemin getirdiği dine iman eden ilk kişi Hatice oldu — bütün insanlar arasında, kadın erkek ayrımı olmaksızın, İslam'ı ilk kabul eden oydu.",
+      "İman ettikten sonra Hatice, müşriklerin baskısı ve zulmü karşısında Peygamber Efendimizi sallallahu aleyhi ve sellem hiçbir zaman yalnız bırakmadı. Mekkeli müşrikler Müslümanları Şi'b-i Ebî Talib'de boykota tabi tuttuğunda, Hatice de Efendimizle birlikte iki üç yıl süren bu ağır boykota göğüs gerdi.<br><br>Sahip olduğu bütün servetini, İslam davasının yayılması ve zor durumdaki Müslümanlara yardım için harcadı. Zenginliğiyle başladığı bu yolculuğu, elindeki her şeyi vererek sürdürdü.",
+      "Hatice radıyallahu anha, hicretten üç yıl önce, altmış üç yaşındayken vefat etti. Aynı yıl Peygamber Efendimizin amcası Ebû Talib de vefat etmişti; bu yüzden o yıla 'hüzün yılı' (senetü'l-hüzn) denildi — Efendimiz, kendisini destekleyen iki büyük dayanağını aynı yıl kaybetmişti.<br><br>Yıllar sonra bile Peygamber Efendimiz sallallahu aleyhi ve sellem, Hatice'yi minnet ve sevgiyle anmaya devam etti. Onun hikayesi bize, sadakatin ve imanın en zor zamanlarda bile bir insana nasıl güç verebileceğini gösteriyor."
+    ],
+    sources: [
+      "M. Yaşar Kandemir, \"Hatice\", TDV İslâm Ansiklopedisi",
+      "İbn Sa'd, et-Tabakâtü'l-kübrâ",
+      "Buhârî, Bedʾü'l-vahy"
     ]
   }
 };
