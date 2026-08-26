@@ -15,6 +15,7 @@
   }
   .screen { display: none; min-height: 100vh; }
   .screen.active { display: block; }
+  #reader.active { display: flex; }
 
   /* ---- ANA SAYFA ---- */
   #home { padding: 1.25rem 1rem 5rem; max-width: 480px; margin: 0 auto; }
@@ -65,42 +66,66 @@
   .tab { font-size: 20px; opacity: 0.5; }
   .tab.active { opacity: 1; color: #d4a339; }
 
-  /* ---- OKUMA / FLIPBOOK EKRANI ---- */
-  #reader { background: #0f0d0a; min-height: 100vh; }
+  /* ---- OKUMA / TAM EKRAN KİTAP ---- */
+  #reader {
+    position: fixed; inset: 0; z-index: 20;
+    background: #dcd3bd;
+    display: none;
+    flex-direction: column;
+  }
+  #reader.active { display: flex; }
   .reader-top {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem; position: sticky; top: 0; background: #0f0d0a; z-index: 5;
+    padding: 14px 18px; flex-shrink: 0;
   }
-  .back-btn { font-size: 14px; color: #d4a339; cursor: pointer; }
-  .page-indicator { font-size: 12px; color: #a89f8f; }
+  .back-btn { font-size: 13px; color: #6b5a3e; cursor: pointer; }
+  .page-indicator { font-size: 12px; color: #8a7a5c; font-family: Georgia, serif; }
 
   .book-wrap {
-    display: flex; justify-content: center; align-items: center;
-    padding: 1rem; perspective: 1600px;
+    flex: 1; min-height: 0; position: relative; perspective: 2200px;
+    padding: 0 4px 4px; overflow: hidden;
   }
-  .book {
-    position: relative; width: 320px; height: 460px;
-  }
+  .book { position: absolute; inset: 0 4px 4px; transform-style: preserve-3d; }
+
   .page {
-    position: absolute; top: 0; left: 0; width: 320px; height: 460px;
-    background: #f7f1e3; color: #2b2420; border-radius: 4px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    padding: 28px 24px; overflow: hidden;
+    position: absolute; inset: 0;
+    background: #f7f1e3;
+    background-image: radial-gradient(ellipse at top left, rgba(255,255,255,0.5), transparent 60%);
+    color: #2b2420;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.15), 0 2px 14px rgba(0,0,0,0.2);
+    padding: 40px 26px 56px;
+    overflow-y: auto;
     transform-origin: left center;
-    transition: transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1);
+    transform: rotateY(0deg);
     backface-visibility: hidden;
   }
+  .page.turning-fwd { animation: curlFwd 0.7s cubic-bezier(0.45,0.05,0.55,0.95) forwards; }
+  .page.turning-back { animation: curlBack 0.7s cubic-bezier(0.45,0.05,0.55,0.95) forwards; }
   .page.flipped { transform: rotateY(-180deg); }
-  .page-num { position: absolute; bottom: 14px; right: 20px; font-size: 11px; color: #8a7355; }
-  .page h3 { font-family: Georgia, serif; font-size: 17px; margin-bottom: 12px; color: #2b2420; }
-  .page p { font-family: Georgia, serif; font-size: 14px; line-height: 1.75; color: #3d342a; }
 
-  .nav-row { display: flex; justify-content: center; gap: 24px; padding: 1rem 0 2rem; }
-  .nav-btn {
-    background: #24211b; color: #f5efe4; border: none; border-radius: 8px;
-    padding: 10px 22px; font-size: 14px;
+  @keyframes curlFwd {
+    0%   { transform: rotateY(0deg) translateZ(0); box-shadow: -2px 0 10px rgba(0,0,0,0.15); }
+    45%  { transform: rotateY(-95deg) translateZ(30px) scaleY(0.985); box-shadow: -40px 10px 60px rgba(0,0,0,0.45); }
+    100% { transform: rotateY(-180deg) translateZ(0); box-shadow: -2px 0 10px rgba(0,0,0,0.15); }
   }
-  .nav-btn:disabled { opacity: 0.3; }
+  @keyframes curlBack {
+    0%   { transform: rotateY(-180deg) translateZ(0); box-shadow: -2px 0 10px rgba(0,0,0,0.15); }
+    45%  { transform: rotateY(-85deg) translateZ(30px) scaleY(0.985); box-shadow: -40px 10px 60px rgba(0,0,0,0.45); }
+    100% { transform: rotateY(0deg) translateZ(0); box-shadow: -2px 0 10px rgba(0,0,0,0.15); }
+  }
+
+  .page-num { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; font-size: 11px; color: #a8977a; font-family: Georgia, serif; }
+  .page .eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #a6772c; margin-bottom: 10px; }
+  .page h3 { font-family: Georgia, serif; font-size: 22px; line-height: 1.35; margin-bottom: 18px; color: #221c15; }
+  .page p { font-family: Georgia, serif; font-size: 16px; line-height: 1.85; color: #3d342a; text-align: justify; }
+  .page ul { font-family: Georgia, serif; font-size: 14px; line-height: 1.7; color: #3d342a; padding-left: 20px; }
+
+  .nav-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px 22px; flex-shrink: 0; }
+  .nav-btn {
+    background: transparent; color: #4a3f2e; border: none;
+    font-size: 14px; font-family: Georgia, serif; padding: 8px 4px;
+  }
+  .nav-btn:disabled { opacity: 0.25; }
 </style>
 </head>
 <body>
@@ -165,8 +190,8 @@
   </div>
 
   <div class="nav-row">
-    <button class="nav-btn" id="prevBtn" onclick="prevPage()">geri</button>
-    <button class="nav-btn" id="nextBtn" onclick="nextPage()">ileri</button>
+    <button class="nav-btn" id="prevBtn" onclick="prevPage()">‹ önceki sayfa</button>
+    <button class="nav-btn" id="nextBtn" onclick="nextPage()">sonraki sayfa ›</button>
   </div>
 </div>
 
@@ -175,11 +200,12 @@ const stories = {
   eyyub: {
     title: "Bir yolculuğun sabrı: Hz. Eyyub'un hikayesi",
     pages: [
-      "Bir insan düşünün: malı mülkü yerinde, çocukları sağlıklı, sağlığı yerinde. Sonra bir gün bunların hepsi elinden alınıyor — tek tek değil, art arda. İşte Hz. Eyyub'un hikayesi böyle başlar. Kur'an'da dört surede, sekiz ayette adı geçen bu peygamber, 'sabır' dendiğinde akla ilk gelen isimdir. Ama onun sabrı, sadece 'sessiz kalmak' değildi. Zor günlerinde bile Allah'a yönelmeyi hiç bırakmamasıydı.",
-      "Eyyub, önce servetini kaybetti. Sonra çocuklarını. En sonunda da bedenine ağır bir hastalık geldi. Kur'an, bu hastalığın ne olduğunu detaylandırmaz — sadece 'sıkıntı ve acı' olarak bahseder. Yıllar içinde anlatılagelen 'vücudunu kurtların sarması' gibi detaylar, aslında güvenilir kaynaklara dayanmıyor; bunlar sonradan eklenmiş rivayetler. Kur'an'ın verdiği bilgiyle yetinmek, kıssayı en doğru haliyle anlamanın yoludur.",
-      "Bu kadar ağır bir imtihanda bir insan ne yapar? Çoğu zaman öfkelenir, sorar: 'Neden ben?' Eyyub farklıydı. Kur'an'da onun duası şöyle aktarılır: 'Rabbim, başıma bela geldi, sen merhametlilerin en merhametlisisin.' Dikkat edin — bu bir şikayet değil, bir sığınma. Eyyub, acısını inkar etmiyor ama onu Allah'tan başka kimseye şikayet etmiyor.",
-      "Bir hadiste Hz. Eyyub şöyle tarif edilir: 'insanların en halimi, en sabırlısı ve öfkesini en çok yeneni.' Bu, sabrın pasif bir şey olmadığını gösterir — aksine, öfkeyi kontrol edebilmek, zor bir iç mücadeledir. Eyyub'un hikayesi bize, acı çekerken bile nazik ve sabırlı kalınabileceğini gösteriyor.",
-      "Sonunda Eyyub'un duası kabul oldu. Kur'an, ona şifa verildiğini ve kaybettiklerinin yerine yenilerinin, hatta daha fazlasının verildiğini anlatır. Bu hikaye bize şunu öğretiyor: sabır, sonucu garanti eden bir sihir değil — ama insanı, en karanlık günlerde bile ayakta tutan bir duruştur. Bugün 'Eyyub sabrı' dediğimizde, aslında bu duruşa işaret ediyoruz."
+      "Bir insan düşünün: malı mülkü yerinde, çocukları sağlıklı, sağlığı yerinde. Sonra bir gün bunların hepsi elinden alınıyor — tek tek değil, art arda. İşte Hz. Eyyub'un hikayesi böyle başlar. Kur'an'da dört surede, sekiz ayette adı geçen bu peygamber, 'sabır' dendiğinde akla ilk gelen isimdir. Ama onun sabrı, sadece 'sessiz kalmak' değildi. Zor günlerinde bile Allah'a yönelmeyi hiç bırakmamasıydı.<br><br>Eyyub'un hikayesi, aslında hepimizin bir gün karşılaşabileceği bir soruyu ortaya koyar: elimizdeki her şey birden yok olsa, hâlâ aynı insan kalabilir miyiz?",
+      "Eyyub, önce servetini kaybetti. Sonra çocuklarını. En sonunda da bedenine ağır bir hastalık geldi. Kur'an, bu hastalığın ne olduğunu detaylandırmaz — sadece 'sıkıntı ve acı' olarak bahseder. Yıllar içinde anlatılagelen 'vücudunu kurtların sarması' gibi detaylar, aslında güvenilir kaynaklara dayanmıyor; bunlar sonradan eklenmiş rivayetler.<br><br>Kur'an'ın verdiği bilgiyle yetinmek, kıssayı en doğru haliyle anlamanın yoludur. Çünkü asıl mesaj, hastalığın türünde değil, insanın ona verdiği tepkide saklı.",
+      "Bu kadar ağır bir imtihanda bir insan ne yapar? Çoğu zaman öfkelenir, sorar: 'Neden ben?' Etrafındaki insanlara sitem eder, hatta bazen inancından şüphe etmeye başlar. Eyyub farklıydı. Kur'an'da onun duası şöyle aktarılır: 'Rabbim, başıma bela geldi, sen merhametlilerin en merhametlisisin.'<br><br>Dikkat edin — bu bir şikayet değil, bir sığınma. Eyyub, acısını inkar etmiyor; hissettiği gerçek acıyı gizlemiyor. Ama onu Allah'tan başka kimseye şikayet etmiyor. Bu ayrım, sabrın ne olduğunu anlamak için çok önemli.",
+      "Bir hadiste Hz. Eyyub şöyle tarif edilir: 'insanların en halimi, en sabırlısı ve öfkesini en çok yeneni.' Bu tanım bize önemli bir şey söylüyor: sabır, pasif bir teslimiyet değil. Aksine, öfkeyi hissedip onu kontrol edebilmek, çok daha zor ve aktif bir iç mücadeledir.<br><br>Yıllar süren bu zorlu dönemde, çevresindeki insanların çoğu ondan uzaklaştı. Ama Eyyub'un duruşu değişmedi. Acı çekerken bile nazik, sabırlı ve Allah'a bağlı kalabileceğini gösterdi — bu, günümüzde bile herkesin başarabileceği bir şey değil.",
+      "Sonunda Eyyub'un duası kabul oldu. Kur'an, ona şifa verildiğini ve kaybettiklerinin yerine yenilerinin, hatta daha fazlasının verildiğini anlatır. Bu detay önemli: Allah, sabrın karşılığını sadece 'eski haline döndürmek' ile değil, fazlasıyla ödüllendirerek verdi.<br><br>Ama hikayenin asıl mesajı burada bitmiyor. Çünkü sabrın karşılığı her zaman bu dünyada, bu kadar net görülmeyebilir. Eyyub'un hikayesi bir istisna değil, bir örnektir — sabrın anlamının sonuçta değil, duruşta olduğunu hatırlatan bir örnek.",
+      "Bugün 'Eyyub sabrı' dediğimizde, aslında bu duruşa işaret ediyoruz: acıyı inkar etmeden, ama ondan yıkılmadan yaşamaya devam edebilme gücü. Bu, hastalıkla, kayıpla, beklenmedik bir yıkımla karşılaşan her insanın kendinde arayabileceği bir şey.<br><br>Eyyub'un hikayesi bize şunu hatırlatıyor: sabır, acının olmadığını iddia etmek değildir. Acıyı yaşarken bile, doğru yerde durmayı seçmektir. Bazen en büyük imtihanlar, en büyük dersleri de beraberinde getirir."
     ],
     sources: [
       "Kur'an-ı Kerim, Sâd Suresi, 41-44. ayetler",
@@ -191,11 +217,12 @@ const stories = {
   selman: {
     title: "Selman-ı Farisi: Hakikat Peşinde Bir Ömür",
     pages: [
-      "Selman, İran'da Mecusi bir ailede doğdu. Ama içinde hep bir soru vardı: 'Gerçek din hangisi?' Bu soru onu, ailesinin dininden koparıp uzun bir yolculuğa çıkardı.",
-      "Önce Hristiyanlığa yöneldi, rahiplerin yanında yıllarca hizmet etti. Her rahip ölürken ona bir sonraki öğretmeni işaret etti — ta ki son rahip ona şunu söyleyene kadar: 'Artık senin yolunda olan kimseyi tanımıyorum. Ama Arap topraklarından bir peygamber çıkacak, iki taşlık arasına hicret edecek.'",
-      "Bu sözler Selman'ı Arabistan'a götürdü. Ancak yolculukta bir kabile tarafından köle olarak satıldı. Medine'ye köle olarak geldiğinde bile aradığı işaretleri kontrol etmeyi bırakmadı.",
-      "Hz. Peygamber'i gördüğünde, ona anlatılan tüm işaretleri onda buldu ve Müslüman oldu. Peygamber'in tavsiyesiyle, sahabenin de katkısıyla özgürlüğüne kavuştu. Hendek Savaşı'nda hendek kazma fikrini getiren de oydu.",
-      "Hz. Peygamber onun için 'Selman bizden, Ehl-i Beyt'tendir' buyurdu. Bir hadiste de 'hakikat Süreyya yıldızında olsa bile Selman onu bulur' denildi. Onun hikayesi, gerçek bir arayışın hiçbir bedeli çok görmediğini gösterir."
+      "Selman, İran'da Mecusi bir ailede doğdu. Zengin bir aileydi, babası bölgenin ileri gelenlerindendi. Ama Selman'ın içinde hep bir soru vardı: 'Gerçek din hangisi?' Bu soru, genç yaşta onu rahatsız etmeye başladı — çevresindeki hiçbir cevap onu tatmin etmiyordu.<br><br>Bu soru, sonunda onu ailesinin dininden koparıp, hayatının geri kalanını şekillendirecek uzun bir yolculuğa çıkardı. Kimse ona bu yolun nereye varacağını söylememişti; o sadece aramaya devam etti.",
+      "Önce Hristiyanlığa yöneldi. Bir kilisede rahiplerin yanında yıllarca hizmet etti, onlardan öğrendi, onlarla yaşadı. Her rahip ölürken ona bir sonraki öğretmeni işaret etti — Selman da o öğretmenin peşinden gitti, şehirden şehre.<br><br>Bu, kolay bir yolculuk değildi. Ailesinden, evinden, tanıdığı her şeyden uzaklaşmıştı. Ama içindeki soru onu durdurmadı. Sonunda son rahip ona şunu söyledi: 'Artık senin yolunda olan kimseyi tanımıyorum. Ama Arap topraklarından bir peygamber çıkacak, iki taşlık arasına hicret edecek.'",
+      "Bu sözler Selman'ı Arabistan'a götürdü. Ancak yolculukta beklenmedik bir şey oldu: bir kabile tarafından köle olarak satıldı. Yıllarca özgürlüğünü kaybetmiş halde yaşadı. Bir insanın hakikat arayışı, en beklenmedik anda en büyük bedeli isteyebilir.<br><br>Medine'ye köle olarak geldiğinde bile, aradığı işaretleri kontrol etmeyi bırakmadı. Ona anlatılan alametleri hafızasında taşıyordu — bir gün bulacağına inanıyordu.",
+      "Hz. Peygamber'i gördüğünde, ona anlatılan tüm işaretleri onda buldu ve hemen Müslüman oldu. Ama özgürlüğü hâlâ yoktu. Peygamber'in tavsiyesiyle, sahabenin de katkısıyla — 300 hurma fidanı dikme ve belli bir bedel ödeme karşılığında — özgürlüğüne kavuştu.<br><br>Bu, İslam tarihinde ilk yazılı özgürlük anlaşmalarından biri olarak kabul edilir. Selman artık hem inancına hem de bedenine kavuşmuştu.",
+      "Selman'ın katkıları burada bitmedi. Hendek Savaşı öncesi, Medine'yi çevreleyen bir hendek kazma fikrini getiren oydu — bu, Arap savaş geleneğinde görülmemiş bir taktikti ve savaşın seyrini değiştirdi. Onun bilgisi ve tecrübesi, sahabe arasında ona özel bir saygı kazandırdı.<br><br>Zekası, ilmi ve ahlakıyla Hz. Peygamber'in övgüsüne mazhar oldu; artık sadece bir arayışçı değil, İslam toplumunun saygın bir üyesiydi.",
+      "Hz. Peygamber onun için 'Selman bizden, Ehl-i Beyt'tendir' buyurdu. Bir hadiste de 'hakikat Süreyya yıldızında olsa bile Selman onu bulur' denildi — bu, onun arayışındaki azmi anlatan en güçlü ifadelerden biri.<br><br>Onun hikayesi, gerçek bir arayışın hiçbir bedeli çok görmediğini gösterir. Ailesinden, özgürlüğünden, yıllarından vazgeçti — ama aradığını bulduğunda, hepsinin değdiğini gördü. Bugün hâlâ 'hakikati arayan bir insan ne kadar ileri gidebilir?' sorusuna en güzel cevaplardan biri olarak anılıyor."
     ],
     sources: [
       "TDV İslam Ansiklopedisi, \"Selmân-ı Fârisî\" maddesi",
@@ -205,11 +232,12 @@ const stories = {
   uveys: {
     title: "Üveys el-Karani: Görmeden Sevmek",
     pages: [
-      "Üveys, Yemen'de yaşayan bir gençti. Hz. Peygamber'in yaşadığı dönemde Müslüman oldu — ama onu hiç göremedi.",
-      "Sebebi basitti: annesi vardı ve gözleri görmüyordu. Üveys, ona bakmayı, Medine'ye gidip Peygamber'i görmekten daha önemli gördü.",
-      "Hz. Peygamber, sahabesine ondan bahsetti: 'Karanlı Üveys size gelecek, ona iyi davranın, ondan dua isteyin.' Bunu duyan Hz. Ömer, yıllar sonra Yemen'den gelenler arasında onu aradı ve buldu.",
-      "Üveys, kendini tanıtınca Hz. Ömer ondan dua istedi. Ama Üveys, insanların ilgisinden rahatsız oldu ve sessizce oradan ayrıldı — şöhretten kaçan bir teslimiyet örneği.",
-      "Hz. Peygamber onun için 'tabiinin en hayırlısı' buyurdu. Onu hiç görmemiş olması, onun değerini hiç azaltmadı. Bu hikaye bize, bir insanın kıymetinin görünürlükle değil, sadakatle ölçüldüğünü hatırlatır."
+      "Üveys, Yemen'de, Murad kabilesinin Karan koluna mensup sade bir gençti. Hz. Peygamber'in yaşadığı dönemde Müslüman oldu — ama İslam tarihinin en tanıdık isimlerinden biri olmasına rağmen, onu hiç göremedi.<br><br>Bu, kendi tercihi değildi. Hayatı, onu farklı bir sadakate yönlendirmişti: annesine olan bağlılığına.",
+      "Sebebi basitti ama derindi: annesi vardı ve gözleri görmüyordu. Üveys, ona bakmayı, hizmet etmeyi, yanında olmayı, Medine'ye gidip Peygamber'i görmekten daha önemli gördü. Bu bir iman eksikliği değildi — aksine, iki değeri bir arada taşıyabilmenin, hangisinin öncelikli olduğunu bilmenin bir işaretiydi.<br><br>Yıllarca bu sadakatle yaşadı; kimse onu tanımıyordu, kimse ondan bahsetmiyordu. Ama bir yerlerde, biri ondan zaten bahsetmişti.",
+      "Hz. Peygamber, hayattayken bile sahabesine ondan bahsetti: 'Karanlı Üveys size gelecek, ona iyi davranın, ondan dua isteyin.' Bu sözler, henüz kimsenin tanımadığı bir insan için söylenmiş büyük bir işaretti.<br><br>Yıllar sonra, Hz. Ömer halifeliği döneminde bunu hatırladı. Yemen'den gelen bir grup insana sordu: 'Aranızda Karanlı Üveys var mı?'",
+      "Üveys, kendini tanıtınca Hz. Ömer ondan dua istedi. Peygamber'in kendisi hakkında söylediklerini anlattı ona. Ama Üveys'in tepkisi beklenmedikti — insanların ilgisinden, şöhretinden rahatsız oldu.<br><br>Sessizce oradan ayrıldı. Bilinmeyi değil, sadakatini sürdürmeyi tercih etti. Bu, günümüzün 'görünür olma' kültürüne tam tersi bir duruştu.",
+      "Bir yıl sonra, Kufe'den hacca gelen birine Hz. Ömer, Üveys'in durumunu sordu. Adam onun yoksulluk içinde, sade bir hayat sürdüğünü söyledi. Hz. Ömer, ona Peygamber'den duyduklarını anlattı; adam da Kufe'ye dönünce Üveys'ten dua istedi.<br><br>Bu haber yayılınca, insanlar onu aramaya, ondan dua istemeye başladı. Üveys yine aynı tepkiyi verdi — bölgeyi terk etti, sade hayatına devam etti.",
+      "Hz. Peygamber onun için 'tabiinin en hayırlısı' buyurdu. Onu hiç görmemiş olması, değerini hiç azaltmadı — belki de tam tersi, onun sadakatini daha da anlamlı kıldı.<br><br>Bu hikaye bize önemli bir şey hatırlatıyor: bir insanın kıymeti, görünürlükle değil, sadakatle ölçülür. Üveys, hiç tanınmadan, hiç bilinmeden, sadece doğru olanı yaparak, İslam tarihinin en saygın isimlerinden biri haline geldi."
     ],
     sources: [
       "TDV İslam Ansiklopedisi, \"Üveys el-Karanî\" maddesi",
@@ -239,27 +267,45 @@ function totalPages() {
   return currentStory.pages.length + 1;
 }
 
-function renderBook() {
+function renderBook(direction) {
   const book = document.getElementById('book');
-  book.innerHTML = '';
   const total = totalPages();
+  const existing = book.querySelectorAll('.page');
 
-  currentStory.pages.forEach((text, i) => {
-    const pageEl = document.createElement('div');
-    pageEl.className = 'page';
-    pageEl.style.zIndex = total - i;
-    pageEl.innerHTML = `<h3>${i === 0 ? currentStory.title : ''}</h3><p>${text}</p><span class="page-num">${i + 1}</span>`;
-    if (i < currentPage) pageEl.classList.add('flipped');
-    book.appendChild(pageEl);
+  const allPages = currentStory.pages.map((text, i) => ({
+    isSource: false,
+    html: `${i === 0 ? `<div class="eyebrow">${currentStory.title}</div><h3>Bölüm ${i + 1}</h3>` : ''}<p>${text}</p><span class="page-num">${i + 1} / ${total}</span>`
+  }));
+  const srcList = currentStory.sources.map(s => `<li style="margin-bottom:8px;">${s}</li>`).join('');
+  allPages.push({
+    isSource: true,
+    html: `<div class="eyebrow">${currentStory.title}</div><h3>Kaynakça</h3><ul>${srcList}</ul><span class="page-num">${total} / ${total}</span>`
   });
 
-  const srcEl = document.createElement('div');
-  srcEl.className = 'page';
-  srcEl.style.zIndex = 1;
-  const srcList = currentStory.sources.map(s => `<li style="margin-bottom:8px;">${s}</li>`).join('');
-  srcEl.innerHTML = `<h3>Kaynakça</h3><ul style="font-family:Georgia,serif;font-size:13px;line-height:1.6;color:#3d342a;padding-left:18px;">${srcList}</ul><span class="page-num">${total}</span>`;
-  if (currentPage >= currentStory.pages.length) srcEl.classList.add('flipped');
-  book.appendChild(srcEl);
+  if (existing.length === 0) {
+    allPages.forEach((p, i) => {
+      const pageEl = document.createElement('div');
+      pageEl.className = 'page';
+      pageEl.style.zIndex = total - i;
+      pageEl.innerHTML = p.html;
+      if (i < currentPage) pageEl.classList.add('flipped');
+      book.appendChild(pageEl);
+    });
+  } else {
+    existing.forEach((pageEl, i) => {
+      pageEl.innerHTML = allPages[i].html;
+      pageEl.classList.remove('turning-fwd', 'turning-back');
+      if (direction === 'fwd' && i === currentPage - 1) {
+        pageEl.classList.add('turning-fwd');
+        pageEl.addEventListener('animationend', () => pageEl.classList.add('flipped'), { once: true });
+      } else if (direction === 'back' && i === currentPage) {
+        pageEl.classList.add('turning-back');
+        pageEl.addEventListener('animationend', () => pageEl.classList.remove('flipped'), { once: true });
+      } else {
+        pageEl.classList.toggle('flipped', i < currentPage);
+      }
+    });
+  }
 
   document.getElementById('pageIndicator').textContent = `${currentPage + 1} / ${total}`;
   document.getElementById('prevBtn').disabled = currentPage === 0;
@@ -269,16 +315,31 @@ function renderBook() {
 function nextPage() {
   if (currentPage < totalPages() - 1) {
     currentPage++;
-    renderBook();
+    renderBook('fwd');
   }
 }
 
 function prevPage() {
   if (currentPage > 0) {
     currentPage--;
-    renderBook();
+    renderBook('back');
   }
 }
+
+let touchStartX = 0;
+let touchStartY = 0;
+const bookWrapEl = document.querySelector('.book-wrap');
+bookWrapEl.addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+bookWrapEl.addEventListener('touchend', (e) => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+    if (dx < 0) nextPage(); else prevPage();
+  }
+}, { passive: true });
 </script>
 
 </body>
