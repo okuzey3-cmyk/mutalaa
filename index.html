@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mütalaa</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #14120f;
+    color: #f5efe4;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: block; }
+
+  /* ---- ANA SAYFA ---- */
+  #home { padding: 1.25rem 1rem 5rem; max-width: 480px; margin: 0 auto; }
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .logo-circle {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: #1e4d3e; display: flex; align-items: center; justify-content: center;
+  }
+  .logo-circle svg { width: 18px; height: 18px; }
+  .brand-name { font-family: Georgia, serif; font-size: 19px; }
+  .icon-btn { width: 20px; height: 20px; opacity: 0.7; }
+
+  .featured {
+    background: linear-gradient(135deg, #1d9e75, #178a56);
+    border-radius: 14px; padding: 1.25rem; margin-bottom: 1.25rem;
+    cursor: pointer;
+  }
+  .featured p.label { font-size: 12px; color: #dff5e8; margin-bottom: 4px; }
+  .featured p.title { font-family: Georgia, serif; font-size: 18px; color: #fff; line-height: 1.5; margin-bottom: 8px; }
+  .featured p.meta { font-size: 12px; color: #dff5e8; }
+
+  .chips { display: flex; gap: 8px; margin-bottom: 1.25rem; overflow-x: auto; padding-bottom: 4px; }
+  .chip {
+    font-size: 12px; padding: 7px 14px; border-radius: 8px; white-space: nowrap;
+    background: #24211b; color: #cfc6b4; flex-shrink: 0; cursor: pointer;
+  }
+  .chip.active { background: #d4a339; color: #412402; }
+
+  .story-list { display: flex; flex-direction: column; gap: 12px; }
+  .story-card {
+    border-radius: 12px; padding: 1rem; display: flex; gap: 12px; align-items: center;
+    cursor: pointer;
+  }
+  .story-icon {
+    width: 48px; height: 48px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .story-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .story-meta { font-size: 12px; }
+
+  .tabbar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #1a1712; border-top: 0.5px solid #2a261e;
+    display: flex; justify-content: space-around; padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+    max-width: 480px; margin: 0 auto;
+  }
+  .tab { font-size: 20px; opacity: 0.5; }
+  .tab.active { opacity: 1; color: #d4a339; }
+
+  /* ---- OKUMA / FLIPBOOK EKRANI ---- */
+  #reader { background: #0f0d0a; min-height: 100vh; }
+  .reader-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem; position: sticky; top: 0; background: #0f0d0a; z-index: 5;
+  }
+  .back-btn { font-size: 14px; color: #d4a339; cursor: pointer; }
+  .page-indicator { font-size: 12px; color: #a89f8f; }
+
+  .book-wrap {
+    display: flex; justify-content: center; align-items: center;
+    padding: 1rem; perspective: 1600px;
+  }
+  .book {
+    position: relative; width: 320px; height: 460px;
+  }
+  .page {
+    position: absolute; top: 0; left: 0; width: 320px; height: 460px;
+    background: #f7f1e3; color: #2b2420; border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    padding: 28px 24px; overflow: hidden;
+    transform-origin: left center;
+    transition: transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1);
+    backface-visibility: hidden;
+  }
+  .page.flipped { transform: rotateY(-180deg); }
+  .page-num { position: absolute; bottom: 14px; right: 20px; font-size: 11px; color: #8a7355; }
+  .page h3 { font-family: Georgia, serif; font-size: 17px; margin-bottom: 12px; color: #2b2420; }
+  .page p { font-family: Georgia, serif; font-size: 14px; line-height: 1.75; color: #3d342a; }
+
+  .nav-row { display: flex; justify-content: center; gap: 24px; padding: 1rem 0 2rem; }
+  .nav-btn {
+    background: #24211b; color: #f5efe4; border: none; border-radius: 8px;
+    padding: 10px 22px; font-size: 14px;
+  }
+  .nav-btn:disabled { opacity: 0.3; }
+</style>
+</head>
+<body>
+
+<div id="home" class="screen active">
+  <div class="header">
+    <div class="brand">
+      <div class="logo-circle">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 6 L12 18 Q9 16.5 6 17 L6 7.5 Q9 6.2 12 6 Z" fill="#faf5e8"/><path d="M12 6 L12 18 Q15 16.5 18 17 L18 7.5 Q15 6.2 12 6 Z" fill="#faf5e8" opacity="0.85"/></svg>
+      </div>
+      <span class="brand-name">Mütalaa</span>
+    </div>
+    <svg class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="#a89f8f" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+  </div>
+
+  <div class="featured" onclick="openReader('eyyub')">
+    <p class="label">bugünün hikayesi</p>
+    <p class="title">Bir yolculuğun sabrı: Hz. Eyyub'un hikayesi</p>
+    <p class="meta">9 dakikalık okuma</p>
+  </div>
+
+  <div class="chips">
+    <span class="chip active">tümü</span>
+    <span class="chip">peygamberler</span>
+    <span class="chip">sahabe</span>
+    <span class="chip">evliyalar</span>
+  </div>
+
+  <div class="story-list">
+    <div class="story-card" style="background:#241a10" onclick="openReader('selman')">
+      <div class="story-icon" style="background:#d4832a">🌙</div>
+      <div>
+        <div class="story-title">Selman-ı Farisi: Hakikat Peşinde Bir Ömür</div>
+        <div class="story-meta" style="color:#b8ab90">sahabe · 6 dk</div>
+      </div>
+    </div>
+    <div class="story-card" style="background:#26151f" onclick="openReader('uveys')">
+      <div class="story-icon" style="background:#e0578a">🤲</div>
+      <div>
+        <div class="story-title">Üveys el-Karani: Görmeden Sevmek</div>
+        <div class="story-meta" style="color:#dba9bb">tabiin · 5 dk</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabbar">
+    <span class="tab active">⌂</span>
+    <span class="tab">🔖</span>
+    <span class="tab">▤</span>
+    <span class="tab">☺</span>
+  </div>
+</div>
+
+<div id="reader" class="screen">
+  <div class="reader-top">
+    <span class="back-btn" onclick="goHome()">← ana sayfa</span>
+    <span class="page-indicator" id="pageIndicator">1 / 3</span>
+  </div>
+
+  <div class="book-wrap">
+    <div class="book" id="book"></div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prevBtn" onclick="prevPage()">geri</button>
+    <button class="nav-btn" id="nextBtn" onclick="nextPage()">ileri</button>
+  </div>
+</div>
+
+<script>
+const stories = {
+  eyyub: {
+    title: "Bir yolculuğun sabrı: Hz. Eyyub'un hikayesi",
+    pages: [
+      "Bir insan düşünün: malı mülkü yerinde, çocukları sağlıklı, sağlığı yerinde. Sonra bir gün bunların hepsi elinden alınıyor — tek tek değil, art arda. İşte Hz. Eyyub'un hikayesi böyle başlar. Kur'an'da dört surede, sekiz ayette adı geçen bu peygamber, 'sabır' dendiğinde akla ilk gelen isimdir. Ama onun sabrı, sadece 'sessiz kalmak' değildi. Zor günlerinde bile Allah'a yönelmeyi hiç bırakmamasıydı.",
+      "Eyyub, önce servetini kaybetti. Sonra çocuklarını. En sonunda da bedenine ağır bir hastalık geldi. Kur'an, bu hastalığın ne olduğunu detaylandırmaz — sadece 'sıkıntı ve acı' olarak bahseder. Yıllar içinde anlatılagelen 'vücudunu kurtların sarması' gibi detaylar, aslında güvenilir kaynaklara dayanmıyor; bunlar sonradan eklenmiş rivayetler. Kur'an'ın verdiği bilgiyle yetinmek, kıssayı en doğru haliyle anlamanın yoludur.",
+      "Bu kadar ağır bir imtihanda bir insan ne yapar? Çoğu zaman öfkelenir, sorar: 'Neden ben?' Eyyub farklıydı. Kur'an'da onun duası şöyle aktarılır: 'Rabbim, başıma bela geldi, sen merhametlilerin en merhametlisisin.' Dikkat edin — bu bir şikayet değil, bir sığınma. Eyyub, acısını inkar etmiyor ama onu Allah'tan başka kimseye şikayet etmiyor.",
+      "Bir hadiste Hz. Eyyub şöyle tarif edilir: 'insanların en halimi, en sabırlısı ve öfkesini en çok yeneni.' Bu, sabrın pasif bir şey olmadığını gösterir — aksine, öfkeyi kontrol edebilmek, zor bir iç mücadeledir. Eyyub'un hikayesi bize, acı çekerken bile nazik ve sabırlı kalınabileceğini gösteriyor.",
+      "Sonunda Eyyub'un duası kabul oldu. Kur'an, ona şifa verildiğini ve kaybettiklerinin yerine yenilerinin, hatta daha fazlasının verildiğini anlatır. Bu hikaye bize şunu öğretiyor: sabır, sonucu garanti eden bir sihir değil — ama insanı, en karanlık günlerde bile ayakta tutan bir duruştur. Bugün 'Eyyub sabrı' dediğimizde, aslında bu duruşa işaret ediyoruz."
+    ],
+    sources: [
+      "Kur'an-ı Kerim, Sâd Suresi, 41-44. ayetler",
+      "Kur'an-ı Kerim, Enbiya Suresi, 83-84. ayetler",
+      "İbn-i Ebî Şeybe, el-Musannef, III, 201 (hadis)",
+      "Diyanet İşleri Başkanlığı, Kur'an-ı Kerim Meali ve Tefsiri"
+    ]
+  },
+  selman: {
+    title: "Selman-ı Farisi: Hakikat Peşinde Bir Ömür",
+    pages: [
+      "Selman, İran'da Mecusi bir ailede doğdu. Ama içinde hep bir soru vardı: 'Gerçek din hangisi?' Bu soru onu, ailesinin dininden koparıp uzun bir yolculuğa çıkardı.",
+      "Önce Hristiyanlığa yöneldi, rahiplerin yanında yıllarca hizmet etti. Her rahip ölürken ona bir sonraki öğretmeni işaret etti — ta ki son rahip ona şunu söyleyene kadar: 'Artık senin yolunda olan kimseyi tanımıyorum. Ama Arap topraklarından bir peygamber çıkacak, iki taşlık arasına hicret edecek.'",
+      "Bu sözler Selman'ı Arabistan'a götürdü. Ancak yolculukta bir kabile tarafından köle olarak satıldı. Medine'ye köle olarak geldiğinde bile aradığı işaretleri kontrol etmeyi bırakmadı.",
+      "Hz. Peygamber'i gördüğünde, ona anlatılan tüm işaretleri onda buldu ve Müslüman oldu. Peygamber'in tavsiyesiyle, sahabenin de katkısıyla özgürlüğüne kavuştu. Hendek Savaşı'nda hendek kazma fikrini getiren de oydu.",
+      "Hz. Peygamber onun için 'Selman bizden, Ehl-i Beyt'tendir' buyurdu. Bir hadiste de 'hakikat Süreyya yıldızında olsa bile Selman onu bulur' denildi. Onun hikayesi, gerçek bir arayışın hiçbir bedeli çok görmediğini gösterir."
+    ],
+    sources: [
+      "TDV İslam Ansiklopedisi, \"Selmân-ı Fârisî\" maddesi",
+      "Ahmed b. Hanbel, el-Müsned"
+    ]
+  },
+  uveys: {
+    title: "Üveys el-Karani: Görmeden Sevmek",
+    pages: [
+      "Üveys, Yemen'de yaşayan bir gençti. Hz. Peygamber'in yaşadığı dönemde Müslüman oldu — ama onu hiç göremedi.",
+      "Sebebi basitti: annesi vardı ve gözleri görmüyordu. Üveys, ona bakmayı, Medine'ye gidip Peygamber'i görmekten daha önemli gördü.",
+      "Hz. Peygamber, sahabesine ondan bahsetti: 'Karanlı Üveys size gelecek, ona iyi davranın, ondan dua isteyin.' Bunu duyan Hz. Ömer, yıllar sonra Yemen'den gelenler arasında onu aradı ve buldu.",
+      "Üveys, kendini tanıtınca Hz. Ömer ondan dua istedi. Ama Üveys, insanların ilgisinden rahatsız oldu ve sessizce oradan ayrıldı — şöhretten kaçan bir teslimiyet örneği.",
+      "Hz. Peygamber onun için 'tabiinin en hayırlısı' buyurdu. Onu hiç görmemiş olması, onun değerini hiç azaltmadı. Bu hikaye bize, bir insanın kıymetinin görünürlükle değil, sadakatle ölçüldüğünü hatırlatır."
+    ],
+    sources: [
+      "TDV İslam Ansiklopedisi, \"Üveys el-Karanî\" maddesi",
+      "Ahmed b. Hanbel, el-Müsned",
+      "İbn Sa'd, et-Tabakâtü'l-kübrâ"
+    ]
+  }
+};
+
+let currentStory = null;
+let currentPage = 0;
+
+function openReader(id) {
+  currentStory = stories[id];
+  currentPage = 0;
+  document.getElementById('home').classList.remove('active');
+  document.getElementById('reader').classList.add('active');
+  renderBook();
+}
+
+function goHome() {
+  document.getElementById('reader').classList.remove('active');
+  document.getElementById('home').classList.add('active');
+}
+
+function totalPages() {
+  return currentStory.pages.length + 1;
+}
+
+function renderBook() {
+  const book = document.getElementById('book');
+  book.innerHTML = '';
+  const total = totalPages();
+
+  currentStory.pages.forEach((text, i) => {
+    const pageEl = document.createElement('div');
+    pageEl.className = 'page';
+    pageEl.style.zIndex = total - i;
+    pageEl.innerHTML = `<h3>${i === 0 ? currentStory.title : ''}</h3><p>${text}</p><span class="page-num">${i + 1}</span>`;
+    if (i < currentPage) pageEl.classList.add('flipped');
+    book.appendChild(pageEl);
+  });
+
+  const srcEl = document.createElement('div');
+  srcEl.className = 'page';
+  srcEl.style.zIndex = 1;
+  const srcList = currentStory.sources.map(s => `<li style="margin-bottom:8px;">${s}</li>`).join('');
+  srcEl.innerHTML = `<h3>Kaynakça</h3><ul style="font-family:Georgia,serif;font-size:13px;line-height:1.6;color:#3d342a;padding-left:18px;">${srcList}</ul><span class="page-num">${total}</span>`;
+  if (currentPage >= currentStory.pages.length) srcEl.classList.add('flipped');
+  book.appendChild(srcEl);
+
+  document.getElementById('pageIndicator').textContent = `${currentPage + 1} / ${total}`;
+  document.getElementById('prevBtn').disabled = currentPage === 0;
+  document.getElementById('nextBtn').disabled = currentPage === total - 1;
+}
+
+function nextPage() {
+  if (currentPage < totalPages() - 1) {
+    currentPage++;
+    renderBook();
+  }
+}
+
+function prevPage() {
+  if (currentPage > 0) {
+    currentPage--;
+    renderBook();
+  }
+}
+</script>
+
+</body>
+</html>
