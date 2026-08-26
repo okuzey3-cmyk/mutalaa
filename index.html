@@ -18,53 +18,72 @@
   #reader.active { display: flex; }
 
   /* ---- ANA SAYFA ---- */
-  #home { padding: 1.25rem 1rem 5rem; max-width: 480px; margin: 0 auto; }
-  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  #home { background: #faf7f0; color: #241f18; min-height: 100vh; padding: 18px 20px 90px; max-width: 480px; margin: 0 auto; }
+  .top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
   .brand { display: flex; align-items: center; gap: 8px; }
   .logo-circle {
-    width: 34px; height: 34px; border-radius: 50%;
+    width: 30px; height: 30px; border-radius: 50%;
     background: #1e4d3e; display: flex; align-items: center; justify-content: center;
   }
-  .logo-circle svg { width: 18px; height: 18px; }
-  .brand-name { font-family: Georgia, serif; font-size: 19px; }
-  .icon-btn { width: 20px; height: 20px; opacity: 0.7; }
+  .logo-circle svg { width: 16px; height: 16px; }
+  .brand-name { font-family: Georgia, serif; font-size: 15px; color: #6b5f4c; }
+  .icon-btn { width: 20px; height: 20px; opacity: 0.55; }
+
+  .page-heading { font-family: Georgia, serif; font-size: 34px; font-weight: 700; color: #1a160f; margin-bottom: 20px; }
+
+  .tabs { display: flex; gap: 26px; border-bottom: 1px solid #e6ddc9; margin-bottom: 20px; }
+  .tab-item {
+    font-size: 16px; font-weight: 700; color: #b3a891; padding-bottom: 12px;
+    border-bottom: 2px solid transparent; cursor: pointer; font-family: Georgia, serif;
+  }
+  .tab-item.active { color: #1a160f; border-bottom-color: #a6772c; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
   .featured {
-    background: linear-gradient(135deg, #1d9e75, #178a56);
-    border-radius: 14px; padding: 1.25rem; margin-bottom: 1.25rem;
-    cursor: pointer;
+    background: #dfe4d8; border-radius: 14px; padding: 14px;
+    display: flex; gap: 14px; align-items: center; margin-bottom: 26px; cursor: pointer;
   }
-  .featured p.label { font-size: 12px; color: #dff5e8; margin-bottom: 4px; }
-  .featured p.title { font-family: Georgia, serif; font-size: 18px; color: #fff; line-height: 1.5; margin-bottom: 8px; }
-  .featured p.meta { font-size: 12px; color: #dff5e8; }
+  .cover-thumb {
+    width: 64px; height: 88px; border-radius: 4px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 8px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+  }
+  .cover-thumb span { font-family: Georgia, serif; font-weight: 700; font-size: 12px; line-height: 1.25; color: #fff; }
+  .featured-info { flex: 1; min-width: 0; }
+  .featured-info .f-title { font-family: Georgia, serif; font-size: 16px; font-weight: 700; color: #1a160f; line-height: 1.3; margin-bottom: 6px; }
+  .featured-info .f-meta { font-size: 12px; color: #5d6b52; }
+  .featured-info .f-progress { font-size: 11px; font-weight: 700; letter-spacing: 0.03em; color: #43522f; margin-top: 8px; }
 
-  .chips { display: flex; gap: 8px; margin-bottom: 1.25rem; overflow-x: auto; padding-bottom: 4px; }
-  .chip {
-    font-size: 12px; padding: 7px 14px; border-radius: 8px; white-space: nowrap;
-    background: #24211b; color: #cfc6b4; flex-shrink: 0; cursor: pointer;
-  }
-  .chip.active { background: #d4a339; color: #412402; }
+  .section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .section-title { font-family: Georgia, serif; font-size: 21px; font-weight: 700; color: #1a160f; }
+  .section-chevron { width: 18px; height: 18px; opacity: 0.4; }
 
-  .story-list { display: flex; flex-direction: column; gap: 12px; }
-  .story-card {
-    border-radius: 12px; padding: 1rem; display: flex; gap: 12px; align-items: center;
-    cursor: pointer;
+  .cover-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 26px; }
+  .cover-card { cursor: pointer; }
+  .cover-card .cover-thumb { width: 100%; height: 130px; margin-bottom: 8px; }
+  .cover-card .c-title { font-size: 13px; font-weight: 700; color: #1a160f; line-height: 1.3; margin-bottom: 2px; }
+  .cover-card .c-meta { font-size: 11px; color: #8a7e68; }
+
+  .filter-row { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; }
+  .filter-chip {
+    font-size: 12px; padding: 6px 13px; border-radius: 20px; white-space: nowrap;
+    border: 1px solid #e6ddc9; color: #6b5f4c; flex-shrink: 0; cursor: pointer;
   }
-  .story-icon {
-    width: 48px; height: 48px; border-radius: 8px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; font-size: 22px;
-  }
-  .story-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-  .story-meta { font-size: 12px; }
+  .filter-chip.active { background: #1a160f; color: #faf7f0; border-color: #1a160f; }
 
   .tabbar {
     position: fixed; bottom: 0; left: 0; right: 0;
-    background: #1a1712; border-top: 0.5px solid #2a261e;
-    display: flex; justify-content: space-around; padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+    background: #faf7f0; border-top: 1px solid #e6ddc9;
+    display: flex; justify-content: space-around; padding: 10px 0 max(10px, env(safe-area-inset-bottom));
     max-width: 480px; margin: 0 auto;
   }
-  .tab { font-size: 20px; opacity: 0.5; }
-  .tab.active { opacity: 1; color: #d4a339; }
+  .tab-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; opacity: 0.45; }
+  .tab-nav-item.active { opacity: 1; color: #a6772c; }
+  .tab-nav-item svg { width: 22px; height: 22px; }
+  .tab-nav-item span { font-size: 10px; font-weight: 700; }
+
 
   /* ---- OKUMA / TAM EKRAN KİTAP ---- */
   #reader {
@@ -115,10 +134,10 @@
   }
 
   .page-num { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; font-size: 11px; color: #a8977a; font-family: Georgia, serif; }
-  .page .eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #a6772c; margin-bottom: 10px; }
-  .page h3 { font-family: Georgia, serif; font-size: 22px; line-height: 1.35; margin-bottom: 18px; color: #221c15; }
-  .page p { font-family: Georgia, serif; font-size: 16px; line-height: 1.85; color: #3d342a; text-align: justify; }
-  .page ul { font-family: Georgia, serif; font-size: 14px; line-height: 1.7; color: #3d342a; padding-left: 20px; }
+  .page .eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #a6772c; margin-bottom: 10px; font-weight: 700; }
+  .page h3 { font-family: Georgia, serif; font-size: 22px; font-weight: 700; line-height: 1.35; margin-bottom: 18px; color: #17130c; }
+  .page p { font-family: Georgia, serif; font-size: 17px; font-weight: 600; line-height: 1.9; color: #221c15; text-align: justify; }
+  .page ul { font-family: Georgia, serif; font-size: 15px; font-weight: 600; line-height: 1.8; color: #221c15; padding-left: 20px; }
 
   .nav-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px 22px; flex-shrink: 0; }
   .nav-btn {
@@ -131,51 +150,118 @@
 <body>
 
 <div id="home" class="screen active">
-  <div class="header">
+  <div class="top-row">
     <div class="brand">
       <div class="logo-circle">
         <svg viewBox="0 0 24 24" fill="none"><path d="M12 6 L12 18 Q9 16.5 6 17 L6 7.5 Q9 6.2 12 6 Z" fill="#faf5e8"/><path d="M12 6 L12 18 Q15 16.5 18 17 L18 7.5 Q15 6.2 12 6 Z" fill="#faf5e8" opacity="0.85"/></svg>
       </div>
       <span class="brand-name">Mütalaa</span>
     </div>
-    <svg class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="#a89f8f" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <svg class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="#4a3f2e" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
   </div>
 
-  <div class="featured" onclick="openReader('eyyub')">
-    <p class="label">bugünün hikayesi</p>
-    <p class="title">Bir yolculuğun sabrı: Hz. Eyyub'un hikayesi</p>
-    <p class="meta">9 dakikalık okuma</p>
+  <div class="page-heading">Ana Sayfa</div>
+
+  <div class="tabs">
+    <span class="tab-item active" onclick="switchTab('bugun')">Bugün</span>
+    <span class="tab-item" onclick="switchTab('tumu')">Tüm Hikayeler</span>
   </div>
 
-  <div class="chips">
-    <span class="chip active">tümü</span>
-    <span class="chip">peygamberler</span>
-    <span class="chip">sahabe</span>
-    <span class="chip">evliyalar</span>
-  </div>
-
-  <div class="story-list">
-    <div class="story-card" style="background:#241a10" onclick="openReader('selman')">
-      <div class="story-icon" style="background:#d4832a">🌙</div>
-      <div>
-        <div class="story-title">Selman-ı Farisi: Hakikat Peşinde Bir Ömür</div>
-        <div class="story-meta" style="color:#b8ab90">sahabe · 6 dk</div>
+  <div id="panel-bugun" class="tab-panel active">
+    <div class="featured" onclick="openReader('eyyub')">
+      <div class="cover-thumb" style="background:linear-gradient(150deg,#1d9e75,#0f6e56);">
+        <span>Hz. Eyyub'un Hikayesi</span>
+      </div>
+      <div class="featured-info">
+        <div class="f-title">Bir yolculuğun sabrı</div>
+        <div class="f-meta">peygamberler · 9 dakikalık okuma</div>
+        <div class="f-progress">BUGÜNÜN HİKAYESİ</div>
       </div>
     </div>
-    <div class="story-card" style="background:#26151f" onclick="openReader('uveys')">
-      <div class="story-icon" style="background:#e0578a">🤲</div>
-      <div>
-        <div class="story-title">Üveys el-Karani: Görmeden Sevmek</div>
-        <div class="story-meta" style="color:#dba9bb">tabiin · 5 dk</div>
+
+    <div class="section-row">
+      <span class="section-title">Bugün ayrıca okunabilir</span>
+    </div>
+    <div class="cover-grid">
+      <div class="cover-card" onclick="openReader('selman')">
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#d4832a,#a6772c);"><span>Selman-ı Farisi</span></div>
+        <div class="c-title">Hakikat Peşinde</div>
+        <div class="c-meta">sahabe · 8 dk</div>
+      </div>
+      <div class="cover-card" onclick="openReader('uveys')">
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#c9578a,#8a3556);"><span>Üveys el-Karani</span></div>
+        <div class="c-title">Görmeden Sevmek</div>
+        <div class="c-meta">tabiin · 7 dk</div>
+      </div>
+      <div class="cover-card" onclick="openReader('bilal')">
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#3a6ea8,#1f4c7a);"><span>Bilal-i Habeşi</span></div>
+        <div class="c-title">Sesiyle Özgür Kalan Adam</div>
+        <div class="c-meta">sahabe · 9 dk</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="panel-tumu" class="tab-panel">
+    <div class="filter-row">
+      <span class="filter-chip active">tümü</span>
+      <span class="filter-chip">peygamberler</span>
+      <span class="filter-chip">sahabe</span>
+      <span class="filter-chip">tabiin</span>
+      <span class="filter-chip">evliyalar</span>
+    </div>
+    <div class="section-row">
+      <span class="section-title">Tüm hikayeler</span>
+    </div>
+    <div class="cover-grid">
+      <div class="cover-card" onclick="openReader('eyyub')">
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#1d9e75,#0f6e56);"><span>Hz. Eyyub'un Hikayesi</span></div>
+        <div class="c-title">Bir yolculuğun sabrı</div>
+        <div class="c-meta">peygamberler · 9 dk</div>
+      </div>
+      <div class="cover-card" onclick="openReader('selman')">
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#d4832a,#a6772c);"><span>Selman-ı Farisi</span></div>
+        <div class="c-title">Hakikat Peşinde</div>
+        <div class="c-meta">sahabe · 8 dk</div>
+      </div>
+      <div class="cover-card" onclick="openReader('uveys')">
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#c9578a,#8a3556);"><span>Üveys el-Karani</span></div>
+        <div class="c-title">Görmeden Sevmek</div>
+        <div class="c-meta">tabiin · 7 dk</div>
+      </div>
+      <div class="cover-card" onclick="openReader('bilal')">
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#3a6ea8,#1f4c7a);"><span>Bilal-i Habeşi</span></div>
+        <div class="c-title">Sesiyle Özgür Kalan Adam</div>
+        <div class="c-meta">sahabe · 9 dk</div>
+      </div>
+      <div class="cover-card" onclick="openReader('bayezid')">
+        <div class="cover-thumb" style="background:linear-gradient(150deg,#6b5ca8,#453a7a);"><span>Bayezid-i Bistami</span></div>
+        <div class="c-title">Benlikten Geçiş</div>
+        <div class="c-meta">evliyalar · 8 dk</div>
       </div>
     </div>
   </div>
 
   <div class="tabbar">
-    <span class="tab active">⌂</span>
-    <span class="tab">🔖</span>
-    <span class="tab">▤</span>
-    <span class="tab">☺</span>
+    <div class="tab-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      <span>Ana Sayfa</span>
+    </div>
+    <div class="tab-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h4v16H4z"/><path d="M10 4h4v16h-4z"/><path d="M16 5l4-1 1 15-4 1z"/></svg>
+      <span>Kitaplarım</span>
+    </div>
+    <div class="tab-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <span>Ara</span>
+    </div>
+    <div class="tab-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C1 8 3 4 7 4c2.2 0 3.8 1.2 5 3 1.2-1.8 2.8-3 5-3 4 0 6 4 4.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg>
+      <span>İstek Listesi</span>
+    </div>
+    <div class="tab-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+      <span>Hesap</span>
+    </div>
   </div>
 </div>
 
@@ -205,13 +291,15 @@ const stories = {
       "Bu kadar ağır bir imtihanda bir insan ne yapar? Çoğu zaman öfkelenir, sorar: 'Neden ben?' Etrafındaki insanlara sitem eder, hatta bazen inancından şüphe etmeye başlar. Eyyub farklıydı. Kur'an'da onun duası şöyle aktarılır: 'Rabbim, başıma bela geldi, sen merhametlilerin en merhametlisisin.'<br><br>Dikkat edin — bu bir şikayet değil, bir sığınma. Eyyub, acısını inkar etmiyor; hissettiği gerçek acıyı gizlemiyor. Ama onu Allah'tan başka kimseye şikayet etmiyor. Bu ayrım, sabrın ne olduğunu anlamak için çok önemli.",
       "Bir hadiste Hz. Eyyub şöyle tarif edilir: 'insanların en halimi, en sabırlısı ve öfkesini en çok yeneni.' Bu tanım bize önemli bir şey söylüyor: sabır, pasif bir teslimiyet değil. Aksine, öfkeyi hissedip onu kontrol edebilmek, çok daha zor ve aktif bir iç mücadeledir.<br><br>Yıllar süren bu zorlu dönemde, çevresindeki insanların çoğu ondan uzaklaştı. Ama Eyyub'un duruşu değişmedi. Acı çekerken bile nazik, sabırlı ve Allah'a bağlı kalabileceğini gösterdi — bu, günümüzde bile herkesin başarabileceği bir şey değil.",
       "Sonunda Eyyub'un duası kabul oldu. Kur'an, ona şifa verildiğini ve kaybettiklerinin yerine yenilerinin, hatta daha fazlasının verildiğini anlatır. Bu detay önemli: Allah, sabrın karşılığını sadece 'eski haline döndürmek' ile değil, fazlasıyla ödüllendirerek verdi.<br><br>Ama hikayenin asıl mesajı burada bitmiyor. Çünkü sabrın karşılığı her zaman bu dünyada, bu kadar net görülmeyebilir. Eyyub'un hikayesi bir istisna değil, bir örnektir — sabrın anlamının sonuçta değil, duruşta olduğunu hatırlatan bir örnek.",
-      "Bugün 'Eyyub sabrı' dediğimizde, aslında bu duruşa işaret ediyoruz: acıyı inkar etmeden, ama ondan yıkılmadan yaşamaya devam edebilme gücü. Bu, hastalıkla, kayıpla, beklenmedik bir yıkımla karşılaşan her insanın kendinde arayabileceği bir şey.<br><br>Eyyub'un hikayesi bize şunu hatırlatıyor: sabır, acının olmadığını iddia etmek değildir. Acıyı yaşarken bile, doğru yerde durmayı seçmektir. Bazen en büyük imtihanlar, en büyük dersleri de beraberinde getirir."
+      "Bugün 'Eyyub sabrı' dediğimizde, aslında bu duruşa işaret ediyoruz: acıyı inkar etmeden, ama ondan yıkılmadan yaşamaya devam edebilme gücü. Bu, hastalıkla, kayıpla, beklenmedik bir yıkımla karşılaşan her insanın kendinde arayabileceği bir şey.<br><br>Eyyub'un hikayesi bize şunu hatırlatıyor: sabır, acının olmadığını iddia etmek değildir. Acıyı yaşarken bile, doğru yerde durmayı seçmektir.",
+      "Eyyub'un kıssası, Kur'an'da başka peygamberlerin sıkıntılarıyla birlikte anılır — Yunus, Zekeriyya ve İsa aleyhisselamın çektikleriyle yan yana zikredilir. Müfessirler bunun tesadüf olmadığını söyler: bu kıssalar, zorluk çeken herkese, özellikle de son peygamber sallallahu aleyhi ve selleme bir teselli olarak aktarılmıştır.<br><br>Yani Eyyub'un hikayesi tek başına bir kıssa değil, sabrın peygamberler tarihindeki ortak bir dili gibidir. Her biri farklı bir acıyla sınandı, ama hepsi aynı duruşu gösterdi: Allah'a yönelmek, O'ndan başkasına şikayet etmemek.<br><br>Bazen en büyük imtihanlar, en büyük dersleri de beraberinde getirir — bu, sadece Eyyub'un değil, sabrı seçen herkesin hikayesidir."
     ],
     sources: [
       "Kur'an-ı Kerim, Sâd Suresi, 41-44. ayetler",
       "Kur'an-ı Kerim, Enbiya Suresi, 83-84. ayetler",
       "İbn-i Ebî Şeybe, el-Musannef, III, 201 (hadis)",
-      "Diyanet İşleri Başkanlığı, Kur'an-ı Kerim Meali ve Tefsiri"
+      "Diyanet İşleri Başkanlığı, Kur'an-ı Kerim Meali ve Tefsiri",
+      "Muhammed Ali es-Sâbûnî, Tefsirlerin Özü"
     ]
   },
   selman: {
@@ -219,10 +307,10 @@ const stories = {
     pages: [
       "Selman, İran'da Mecusi bir ailede doğdu. Zengin bir aileydi, babası bölgenin ileri gelenlerindendi. Ama Selman'ın içinde hep bir soru vardı: 'Gerçek din hangisi?' Bu soru, genç yaşta onu rahatsız etmeye başladı — çevresindeki hiçbir cevap onu tatmin etmiyordu.<br><br>Bu soru, sonunda onu ailesinin dininden koparıp, hayatının geri kalanını şekillendirecek uzun bir yolculuğa çıkardı. Kimse ona bu yolun nereye varacağını söylememişti; o sadece aramaya devam etti.",
       "Önce Hristiyanlığa yöneldi. Bir kilisede rahiplerin yanında yıllarca hizmet etti, onlardan öğrendi, onlarla yaşadı. Her rahip ölürken ona bir sonraki öğretmeni işaret etti — Selman da o öğretmenin peşinden gitti, şehirden şehre.<br><br>Bu, kolay bir yolculuk değildi. Ailesinden, evinden, tanıdığı her şeyden uzaklaşmıştı. Ama içindeki soru onu durdurmadı. Sonunda son rahip ona şunu söyledi: 'Artık senin yolunda olan kimseyi tanımıyorum. Ama Arap topraklarından bir peygamber çıkacak, iki taşlık arasına hicret edecek.'",
-      "Bu sözler Selman'ı Arabistan'a götürdü. Ancak yolculukta beklenmedik bir şey oldu: bir kabile tarafından köle olarak satıldı. Yıllarca özgürlüğünü kaybetmiş halde yaşadı. Bir insanın hakikat arayışı, en beklenmedik anda en büyük bedeli isteyebilir.<br><br>Medine'ye köle olarak geldiğinde bile, aradığı işaretleri kontrol etmeyi bırakmadı. Ona anlatılan alametleri hafızasında taşıyordu — bir gün bulacağına inanıyordu.",
-      "Hz. Peygamber'i gördüğünde, ona anlatılan tüm işaretleri onda buldu ve hemen Müslüman oldu. Ama özgürlüğü hâlâ yoktu. Peygamber'in tavsiyesiyle, sahabenin de katkısıyla — 300 hurma fidanı dikme ve belli bir bedel ödeme karşılığında — özgürlüğüne kavuştu.<br><br>Bu, İslam tarihinde ilk yazılı özgürlük anlaşmalarından biri olarak kabul edilir. Selman artık hem inancına hem de bedenine kavuşmuştu.",
-      "Selman'ın katkıları burada bitmedi. Hendek Savaşı öncesi, Medine'yi çevreleyen bir hendek kazma fikrini getiren oydu — bu, Arap savaş geleneğinde görülmemiş bir taktikti ve savaşın seyrini değiştirdi. Onun bilgisi ve tecrübesi, sahabe arasında ona özel bir saygı kazandırdı.<br><br>Zekası, ilmi ve ahlakıyla Hz. Peygamber'in övgüsüne mazhar oldu; artık sadece bir arayışçı değil, İslam toplumunun saygın bir üyesiydi.",
-      "Hz. Peygamber onun için 'Selman bizden, Ehl-i Beyt'tendir' buyurdu. Bir hadiste de 'hakikat Süreyya yıldızında olsa bile Selman onu bulur' denildi — bu, onun arayışındaki azmi anlatan en güçlü ifadelerden biri.<br><br>Onun hikayesi, gerçek bir arayışın hiçbir bedeli çok görmediğini gösterir. Ailesinden, özgürlüğünden, yıllarından vazgeçti — ama aradığını bulduğunda, hepsinin değdiğini gördü. Bugün hâlâ 'hakikati arayan bir insan ne kadar ileri gidebilir?' sorusuna en güzel cevaplardan biri olarak anılıyor."
+      "Bu sözler Selman'ı Arabistan'a götürdü. Ancak yolculukta beklenmedik bir şey oldu: bir kabile tarafından köle olarak satıldı. Yıllarca özgürlüğünü kaybetmiş halde yaşadı. Bir insanın hakikat arayışı, en beklenmedik anda en büyük bedeli isteyebilir.<br><br>Medine'ye köle olarak geldiğinde bile, aradığı işaretleri kontrol etmeyi bırakmadı. Ona anlatılan alametleri hafızasında taşıyordu — bir gün bulacağına inanıyordu. Her gün, her yeni yüzde o alametleri arıyordu; umudu hiç tükenmedi.",
+      "Nihayet Peygamber Efendimiz sallallahu aleyhi ve sellemi gördüğünde, ona anlatılan tüm işaretleri O'nda buldu ve hemen iman etti. Ama özgürlüğü hâlâ yoktu. Peygamber Efendimizin (s.a.v.) tavsiyesiyle, ashâb-ı kirâmın da katkısıyla — 300 hurma fidanı dikme ve belli bir bedel ödeme karşılığında — özgürlüğüne kavuştu.<br><br>Bu, İslam tarihinde ilk yazılı özgürlük anlaşmalarından biri olarak kabul edilir. Selman artık hem imanına hem de bedenine kavuşmuştu; yıllarca süren bir arayışın karşılığını almıştı.",
+      "Selman'ın katkıları burada bitmedi. Hendek Savaşı öncesi, Medine'yi çevreleyen bir hendek kazma fikrini getiren oydu — bu, Arap savaş geleneğinde görülmemiş bir taktikti ve savaşın seyrini değiştirdi. Onun bilgisi ve tecrübesi, ashâb-ı kirâm arasında ona özel bir saygı kazandırdı.<br><br>Zekası, ilmi ve ahlakıyla Peygamber Efendimizin (s.a.v.) övgüsüne mazhar oldu; artık sadece bir arayışçı değil, İslam toplumunun saygın bir üyesiydi. Bir zamanlar köle olan bu insan, artık İslam'ın en güvenilir isimlerinden biriydi.",
+      "Peygamber Efendimiz sallallahu aleyhi ve sellem onun için 'Selman bizden, Ehl-i Beyt'tendir' buyurdu. Bir hadiste de 'hakikat Süreyya yıldızında olsa bile Selman onu bulur' denildi — bu, onun arayışındaki azmi anlatan en güçlü ifadelerden biri.<br><br>Onun hikayesi, gerçek bir arayışın hiçbir bedeli çok görmediğini gösterir. Ailesinden, özgürlüğünden, yıllarından vazgeçti — ama aradığını bulduğunda, hepsinin değdiğini gördü. Bugün hâlâ 'hakikati arayan bir insan ne kadar ileri gidebilir?' sorusuna en güzel cevaplardan biri olarak anılıyor. Selman'ın hayatı, sabırla sürdürülen bir arayışın nereye varabileceğinin canlı bir örneğidir."
     ],
     sources: [
       "TDV İslam Ansiklopedisi, \"Selmân-ı Fârisî\" maddesi",
@@ -232,23 +320,61 @@ const stories = {
   uveys: {
     title: "Üveys el-Karani: Görmeden Sevmek",
     pages: [
-      "Üveys, Yemen'de, Murad kabilesinin Karan koluna mensup sade bir gençti. Hz. Peygamber'in yaşadığı dönemde Müslüman oldu — ama İslam tarihinin en tanıdık isimlerinden biri olmasına rağmen, onu hiç göremedi.<br><br>Bu, kendi tercihi değildi. Hayatı, onu farklı bir sadakate yönlendirmişti: annesine olan bağlılığına.",
-      "Sebebi basitti ama derindi: annesi vardı ve gözleri görmüyordu. Üveys, ona bakmayı, hizmet etmeyi, yanında olmayı, Medine'ye gidip Peygamber'i görmekten daha önemli gördü. Bu bir iman eksikliği değildi — aksine, iki değeri bir arada taşıyabilmenin, hangisinin öncelikli olduğunu bilmenin bir işaretiydi.<br><br>Yıllarca bu sadakatle yaşadı; kimse onu tanımıyordu, kimse ondan bahsetmiyordu. Ama bir yerlerde, biri ondan zaten bahsetmişti.",
-      "Hz. Peygamber, hayattayken bile sahabesine ondan bahsetti: 'Karanlı Üveys size gelecek, ona iyi davranın, ondan dua isteyin.' Bu sözler, henüz kimsenin tanımadığı bir insan için söylenmiş büyük bir işaretti.<br><br>Yıllar sonra, Hz. Ömer halifeliği döneminde bunu hatırladı. Yemen'den gelen bir grup insana sordu: 'Aranızda Karanlı Üveys var mı?'",
-      "Üveys, kendini tanıtınca Hz. Ömer ondan dua istedi. Peygamber'in kendisi hakkında söylediklerini anlattı ona. Ama Üveys'in tepkisi beklenmedikti — insanların ilgisinden, şöhretinden rahatsız oldu.<br><br>Sessizce oradan ayrıldı. Bilinmeyi değil, sadakatini sürdürmeyi tercih etti. Bu, günümüzün 'görünür olma' kültürüne tam tersi bir duruştu.",
-      "Bir yıl sonra, Kufe'den hacca gelen birine Hz. Ömer, Üveys'in durumunu sordu. Adam onun yoksulluk içinde, sade bir hayat sürdüğünü söyledi. Hz. Ömer, ona Peygamber'den duyduklarını anlattı; adam da Kufe'ye dönünce Üveys'ten dua istedi.<br><br>Bu haber yayılınca, insanlar onu aramaya, ondan dua istemeye başladı. Üveys yine aynı tepkiyi verdi — bölgeyi terk etti, sade hayatına devam etti.",
-      "Hz. Peygamber onun için 'tabiinin en hayırlısı' buyurdu. Onu hiç görmemiş olması, değerini hiç azaltmadı — belki de tam tersi, onun sadakatini daha da anlamlı kıldı.<br><br>Bu hikaye bize önemli bir şey hatırlatıyor: bir insanın kıymeti, görünürlükle değil, sadakatle ölçülür. Üveys, hiç tanınmadan, hiç bilinmeden, sadece doğru olanı yaparak, İslam tarihinin en saygın isimlerinden biri haline geldi."
+      "Üveys, Yemen'de, Murad kabilesinin Karan koluna mensup sade bir gençti. Peygamber Efendimiz sallallahu aleyhi ve sellemin yaşadığı dönemde iman etti — ama İslam tarihinin en tanıdık isimlerinden biri olmasına rağmen, O'nu (s.a.v.) hiç göremedi.<br><br>Bu, kendi tercihi değildi. Hayatı, onu farklı bir sadakate yönlendirmişti: annesine olan bağlılığına.",
+      "Sebebi basitti ama derindi: annesi vardı ve gözleri görmüyordu. Üveys, ona bakmayı, hizmet etmeyi, yanında olmayı, Medine'ye gidip Peygamber Efendimizi (s.a.v.) görmekten daha önemli gördü. Bu bir iman eksikliği değildi — aksine, iki değeri bir arada taşıyabilmenin, hangisinin öncelikli olduğunu bilmenin bir işaretiydi.<br><br>Yıllarca bu sadakatle yaşadı; kimse onu tanımıyordu, kimse ondan bahsetmiyordu. Ama bir yerlerde, biri ondan zaten bahsetmişti.",
+      "Peygamber Efendimiz sallallahu aleyhi ve sellem, hayattayken bile ashâb-ı kirâmına ondan bahsetti: 'Karanlı Üveys size gelecek, ona iyi davranın, ondan dua isteyin.' Bu sözler, henüz kimsenin tanımadığı bir insan için söylenmiş büyük bir işaretti.<br><br>Yıllar sonra, Hz. Ömer radıyallahu anh halifeliği döneminde bunu hatırladı. Yemen'den gelen bir grup insana sordu: 'Aranızda Karanlı Üveys var mı?'",
+      "Üveys, kendini tanıtınca Hz. Ömer ondan dua istedi. Peygamber Efendimizin (s.a.v.) kendisi hakkında söylediklerini anlattı ona. Ama Üveys'in tepkisi beklenmedikti — insanların ilgisinden, şöhretinden rahatsız oldu.<br><br>Sessizce oradan ayrıldı. Bilinmeyi değil, sadakatini sürdürmeyi tercih etti. Bu, günümüzün 'görünür olma' kültürüne tam tersi bir duruştu.",
+      "Bir yıl sonra, Kufe'den hacca gelen birine Hz. Ömer, Üveys'in durumunu sordu. Adam onun yoksulluk içinde, sade bir hayat sürdüğünü söyledi. Hz. Ömer, ona Peygamber Efendimizden (s.a.v.) duyduklarını anlattı; adam da Kufe'ye dönünce Üveys'ten dua istedi.<br><br>Bu haber yayılınca, insanlar onu aramaya, ondan dua istemeye başladı. Üveys yine aynı tepkiyi verdi — bölgeyi terk etti, sade hayatına devam etti.",
+      "Peygamber Efendimiz sallallahu aleyhi ve sellem onun için 'tabiinin en hayırlısı' buyurdu. Onu hiç görmemiş olması, değerini hiç azaltmadı — belki de tam tersi, onun sadakatini daha da anlamlı kıldı.<br><br>Bu hikaye bize önemli bir şey hatırlatıyor: bir insanın kıymeti, görünürlükle değil, sadakatle ölçülür. Üveys, hiç tanınmadan, hiç bilinmeden, sadece doğru olanı yaparak, İslam tarihinin en saygın isimlerinden biri haline geldi. Onun hikayesi, bir insanın gördüğüyle değil, verdiği kararlarla büyük olabileceğini gösteriyor."
     ],
     sources: [
       "TDV İslam Ansiklopedisi, \"Üveys el-Karanî\" maddesi",
       "Ahmed b. Hanbel, el-Müsned",
       "İbn Sa'd, et-Tabakâtü'l-kübrâ"
     ]
+  },
+  bilal: {
+    title: "Bilal-i Habeşi: Sesiyle Özgür Kalan Adam",
+    pages: [
+      "Bilal, Mekke'de köle bir ailenin çocuğu olarak dünyaya geldi. Annesinin adı Hamâme, babasının adı Rebah'tı — Habeşistan kökenliydiler. Kimse o küçük çocuğun bir gün İslam'ın en tanıdık seslerinden biri olacağını düşünmemişti.<br><br>İslamiyet geldiğinde Bilal, bunu açıktan ilan eden ilk yedi kişiden biri oldu. Bu, o dönemde büyük bir cesaret gerektiriyordu — çünkü bir kölenin efendisine karşı gelmesi, ağır bir bedel demekti.",
+      "Efendisi Ümeyye b. Halef, Bilal'in imanından vazgeçmesi için ona ağır işkenceler yaptı. Onu kızgın çöl kumlarının üzerine yatırıp göğsüne büyük taşlar koydurdu, putların adını söylemesi için zorladı.<br><br>Ama Bilal'in söylediği tek kelime değişmedi: 'Ehad' — yani 'Bir'. Allah'ın tek olduğunu, başka hiçbir söze boyun eğmeyeceğini bu tek kelimeyle haykırıyordu. Peygamber Efendimiz sallallahu aleyhi ve sellem, onun bu şekilde işkence görmesine son derece üzülürdü.",
+      "Hz. Ebû Bekir radıyallahu anh, Bilal'in bu direncini görünce dayanamadı. Müslüman olmayan güçlü bir köleyi vererek — bazı rivayetlere göre de para karşılığında — Bilal'i Ümeyye'nin elinden kurtardı ve onu azat etti.<br><br>Hz. Ömer radıyallahu anh, yıllar sonra bu olayı hatırlayarak şöyle derdi: 'Ebû Bekir efendimizdir; efendimizi (Bilal'i) azat etmiştir.' Artık Bilal özgürdü — ve bu özgürlüğü, hayatını Peygamber Efendimize (s.a.v.) adamakla değerlendirdi.",
+      "Müslümanlar arasında ezan okuma âdeti başlayınca, Peygamber Efendimiz sallallahu aleyhi ve sellem ezanı Bilal'e öğretti ve ilk defa o okudu. Böylece Bilal, İslam'ın ilk müezzini oldu — sesi, güçlü ve gür olduğu için özellikle seçilmişti.<br><br>Bir sabah ezanına kendiliğinden 'es-salâtü hayrun minennevm' (namaz uykudan hayırlıdır) sözlerini ekledi. Peygamber Efendimiz bundan memnun kaldı ve bu eklemenin her sabah tekrar edilmesine izin verdi. Bugün hâlâ dünyanın her yerinde sabah ezanlarında bu sözler okunuyor.",
+      "Bilal, Bedir, Uhud ve Hendek dahil bütün savaşlara katıldı; hazarda ve seferde Peygamber Efendimizin (s.a.v.) yanından ayrılmadı. Mekke'nin fethinde ise en unutulmaz anlardan birini yaşadı: Kâbe'nin damına çıkarak fetih ezanını okudu.<br><br>Bir zamanlar bu şehirde inancı yüzünden işkence görmüş, göç etmek zorunda kalmış bir köleydi. Şimdi aynı şehrin göklerinde Allah'ın adını haykırıyordu. Bu an, onun hayatındaki en büyük dönüşümlerden biriydi.",
+      "Peygamber Efendimiz sallallahu aleyhi ve sellem vefat edince, Bilal artık ezan okuyamaz oldu — sesi her seferinde ona olan hasretini hatırlatıyordu. Şam'a yerleşti; ama bir gün gördüğü bir rüya üzerine Medine'ye geldi ve bir kez daha ezan okudu. Onun sesini duyan halk, Peygamber Efendimizin yaşadığı günleri hatırlayarak sokaklara döküldü.<br><br>Bilal'in hikayesi bize şunu hatırlatıyor: bir insanın değeri, doğduğu yerle ya da statüsüyle değil, imanındaki sağlamlıkla ölçülür. Bir köle olarak başlayan bu hayat, İslam tarihinin en saygın seslerinden biri olarak sona erdi."
+    ],
+    sources: [
+      "TDV İslam Ansiklopedisi, \"Bilâl-i Habeşî\" maddesi",
+      "Buhârî, Feżâʾilü aṣḥâbi'n-nebî, 23",
+      "Semerkand Yayınları, Hayatü's Sahabe (4 Cilt Takım)"
+    ]
+  },
+  bayezid: {
+    title: "Bayezid-i Bistami: Benlikten Geçiş",
+    pages: [
+      "Bayezid, İran'ın Horasan eyaletindeki Bistam kasabasında doğdu. Asıl adı Tayfur'du; babası İsa, dindarlığıyla tanınan bir insandı. Dedesi Sürûşân ise aslen Mecusi bir din adamıyken sonradan Müslüman olmuştu.<br><br>Üç kardeşten ortancasıydı, hepsi de âbid ve zâhid (ibadete düşkün, dünyaya karşı sade) bir hayat sürüyordu. Ama Tayfur, zamanla hepsinden farklı bir yola girecek ve 'Sultânü'l-ârifîn' — ariflerin sultanı — unvanıyla anılacaktı.",
+      "Gençliğinde ilim ve feyz almak için pek çok âlimin yanında bulundu. Kaynaklar, onun tasavvuf yolunda yüzlerce üstaddan ders aldığını aktarır — ama bu bilgilerin çoğu, tarihi kayıtlardan çok, sonraki nesillerin aktardığı menkıbelere (nakledilen anlatılara) dayanır.<br><br>Bunu özellikle belirtmek önemli: TDV İslam Ansiklopedisi'nin de vurguladığı gibi, Bayezid hakkındaki bilgilerin büyük kısmı hayatının kesin kronolojisinden çok, sözleri ve menkıbeleri etrafında şekillenmiştir.",
+      "Bayezid'in tasavvuftaki yeri, 'sekr' (ilahi aşkla kendinden geçme) ve 'fena' (benlikten sıyrılma) kavramlarını derinlemesine yaşaması ve anlatmasıyla bilinir. Onun sözleri, sonraki yüzyıllarda pek çok mutasavvıfı etkiledi.<br><br>Bir keresinde kendisine 'bu derecelere nasıl kavuştunuz?' diye sorulduğunda şöyle cevap verdiği nakledilir: 'Her yerde Allah'ın gördüğünü ve bildiğini düşünüp, edebe riayet etmekle.' Bu sözler, onun tüm öğretisinin özeti gibidir: sürekli bir farkındalık hali.",
+      "Bayezid'e atfedilen en meşhur anlatılardan biri, ruhunun göklere çıkarıldığı ve kendisine 'Bayezid'in mirâcı' denilen bir manevi yolculuktur. Bu anlatıya göre, Allah'a yaklaşmanın yolunun Peygamber Efendimize sallallahu aleyhi ve selleme tabi olmaktan geçtiği kendisine bildirilmiştir.<br><br>Bu tür anlatılar, tasavvuf edebiyatının menkıbe geleneğine aittir — yani sembolik ve öğretici anlatılardır, tarihi olay olarak değil, manevi bir ders olarak okunmalıdır. Mütalaa'da bu ayrımı her zaman net tutmaya özen gösteriyoruz.",
+      "Bir başka anlatıya göre Bayezid, yakınlarının çok övdüğü bir 'veli'yi ziyarete gitmiş, ama o kişinin kıbleye karşı tükürdüğünü görünce hiç konuşmadan geri dönmüştür. Sonra şöyle demiştir: 'Dinin hükümlerini yerine getirmekte, sünnete uymakta zayıf olan birine nasıl veli denilir?'<br><br>Bu anlatı, tasavvuf yolunda en yüksek makamların bile sünnete bağlılıktan ayrı düşünülemeyeceğini vurgular — Bayezid'in öğretisinin merkezinde hep bu denge vardı.",
+      "Bayezid-i Bistami, Bistam'da vefat etti; vefat tarihi kaynaklarda farklı şekillerde aktarılsa da, en eski ve birincil kaynak kabul edilen Sehlegî'nin bilgisine göre 234 (848) yılında, yetmiş üç yaşında hayata gözlerini yumdu.<br><br>Onun mirası, sözleri ve öğretisiyle yüzyıllar boyunca yaşadı. Türbesi bugün hâlâ ziyaret edilen bir yer. Bayezid'in hikayesi bize, tasavvufun en yüksek makamlarının bile sade bir edep ve sünnete bağlılıktan geçtiğini hatırlatıyor."
+    ],
+    sources: [
+      "Süleyman Uludağ, \"Bâyezîd-i Bistâmî\", TDV İslâm Ansiklopedisi",
+      "Semerkand Yayınları, Arifler Sultanı Bayezid-i Bistami (Ciltli); Hayatı ve Menkıbeleri"
+    ]
   }
 };
 
 let currentStory = null;
 let currentPage = 0;
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+  document.querySelector(`.tab-item[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById(`panel-${name}`).classList.add('active');
+}
 
 function openReader(id) {
   currentStory = stories[id];
