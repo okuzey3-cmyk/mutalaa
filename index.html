@@ -52,10 +52,11 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .bk .meta b{display:block;color:var(--fg);font-size:13px;font-weight:600;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .cover{position:relative;aspect-ratio:2/3;border-radius:4px 9px 9px 4px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.28),inset 4px 0 6px -2px rgba(0,0,0,.35);color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:12% 11% 10% 15%}
 .cover::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.18) 0,rgba(255,255,255,0) 7%,rgba(0,0,0,.18) 8%,rgba(0,0,0,0) 12%)}
-.cover .ct{font:700 14px/1.15 Georgia,serif;font:700 clamp(11px,13cqw,19px)/1.15 Georgia,serif;padding-right:16%;text-shadow:0 1px 3px rgba(0,0,0,.4);position:relative;word-break:break-word}
+.cover .ct{font:700 13px/1.15 Georgia,serif;font:700 clamp(10px,11.2cqw,18px)/1.15 Georgia,serif;padding-right:6%;hyphens:auto;text-shadow:0 1px 3px rgba(0,0,0,.4);position:relative;word-break:break-word}
+.cover .cs{font:italic 10px/1.25 Georgia,serif;font:italic clamp(8px,8cqw,11px)/1.25 Georgia,serif;opacity:.88;position:relative;margin-bottom:auto;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .cover .ca{font-size:10px;font-size:clamp(8px,8cqw,11px);opacity:.85;letter-spacing:.6px;text-transform:uppercase;position:relative}
 .cover .rib{position:absolute;top:-2px;right:14%;width:11%;height:24%;background:#c0392b;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);box-shadow:0 2px 4px rgba(0,0,0,.4)}
-.cover .orn{position:relative;height:1px;width:100%;margin:8px 0 auto;background:rgba(255,255,255,.4)}
+.cover .orn{position:relative;height:1px;width:100%;margin:8px 0 8px;flex:0 0 1px;background:rgba(255,255,255,.4)}
 .cw{container-type:inline-size}
 .pct{position:absolute;right:6px;bottom:48px;background:rgba(0,0,0,.65);color:#fff;border-radius:10px;font-size:11px;padding:2px 7px}
 .fab{position:fixed;right:18px;bottom:calc(var(--sab) + 20px);width:54px;height:54px;border-radius:27px;background:var(--acc);color:#fff;font-size:30px;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:5;display:flex;align-items:center;justify-content:center}
@@ -71,6 +72,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 #col p.first,#col h2+p{text-indent:0}
 #col p.sb{text-align:center;text-indent:0;margin:.9em 0;color:var(--muted);letter-spacing:.6em}
 #col p.tts{background:rgba(120,160,255,.18);border-radius:4px}
+#col p.sub{text-indent:0;text-align:left;font-family:-apple-system,"Segoe UI",Roboto,sans-serif;font-weight:700;font-size:.72em;letter-spacing:.9px;text-transform:uppercase;color:var(--acc);margin:1.5em 0 .6em;break-after:avoid;line-height:1.3}
+#col p.li2{text-indent:-1em;padding-left:1em;text-align:left;font-size:.94em;margin:0 0 .5em}
 #col mark{background:var(--hl);color:inherit;border-radius:2px;padding:0}
 #col mark[data-c="g"]{background:#9ad9a0;color:#102}
 #col mark[data-c="b"]{background:#9cc7f2;color:#102}
@@ -188,7 +191,7 @@ var LIST=[];var tab='tum';var qtext='';
 function pos(id){return LS.get('sa_pos_'+id,null)}
 function pctOf(id){var p=pos(id);return p?Math.round((p.pct||0)*100):0}
 function state(id){var p=pos(id);if(!p)return 'sirada';return (p.pct||0)>=0.98?'bitti':'okuyorum'}
-function coverHTML(b){var c=b.renk||PAL[hash(b.title)%PAL.length];var t=b.title;return '<div class="cw"><div class="cover" style="background:linear-gradient(150deg,'+c[0]+','+c[1]+')"><div class="rib"></div><div class="ct">'+esc(t)+'</div><div class="orn"></div><div class="ca">'+esc(b.author||'')+'</div></div></div>'}
+function coverHTML(b){var c=b.renk||PAL[hash(b.title)%PAL.length];var t=b.title;return '<div class="cw"><div class="cover" style="background:linear-gradient(150deg,'+c[0]+','+c[1]+')"><div class="rib"></div><div class="ct">'+esc(t)+'</div><div class="orn"></div><div class="cs">'+esc(b.alt||'')+'</div>'+(b.author?'<div class="ca">'+esc(b.author)+'</div>':'')+'</div></div>'}
 function loadList(){
   return fetch('books/books.json',{cache:'no-cache'}).then(function(r){return r.json()}).catch(function(){var c=LS.get('sa_listcache',null);return c||{kitaplar:[]}}).then(function(j){
     LS.set('sa_listcache',j);
@@ -212,7 +215,7 @@ function renderLib(){
   $('#tabs').innerHTML=Object.keys(names).map(function(k){return '<button data-tab="'+k+'" class="'+(tab===k?'on':'')+'">'+names[k]+'</button>'}).join('');
   var q=qtext.toLowerCase();
   var items=LIST.filter(function(b){return (tab==='tum'||state(b.id)===tab)&&(!q||(b.title+' '+(b.author||'')).toLowerCase().indexOf(q)>=0)});
-  $('#grid').innerHTML=items.length?items.map(function(b){var p=pctOf(b.id);return '<button class="bk" data-open="'+esc(b.id)+'">'+coverHTML(b)+(p>0&&p<98?'<span class="pct">%'+p+'</span>':'')+(p>=98?'<span class="pct">✓ bitti</span>':'')+'<div class="meta"><b>'+esc(b.title)+'</b>'+esc(b.author||'')+(b.kelime?' · '+Math.max(1,Math.round(b.kelime/220/60*10)/10)+' sa':'')+'</div></button>'}).join(''):'<div class="empty" style="grid-column:1/-1">'+(LIST.length?'Bu rafta kitap yok.':'Henüz kitap yok. Sağ alttaki + ile kendi metnini ekleyebilirsin.')+'</div>';
+  $('#grid').innerHTML=items.length?items.map(function(b){var p=pctOf(b.id);return '<button class="bk" data-open="'+esc(b.id)+'">'+coverHTML(b)+(p>0&&p<98?'<span class="pct">%'+p+'</span>':'')+(p>=98?'<span class="pct">✓ bitti</span>':'')+'<div class="meta"><b>'+esc(b.title)+'</b>'+[b.author||'',b.kelime?Math.max(1,Math.round(b.kelime/220/60*10)/10)+' sa okuma':''].filter(Boolean).map(esc).join(' · ')+'</div></button>'}).join(''):'<div class="empty" style="grid-column:1/-1">'+(LIST.length?'Bu rafta kitap yok.':'Henüz kitap yok. Sağ alttaki + ile kendi metnini ekleyebilirsin.')+'</div>';
 }
 $('#tabs').addEventListener('click',function(e){var t=e.target.closest('[data-tab]');if(t){tab=t.dataset.tab;renderLib()}});
 $('#q').addEventListener('input',function(){qtext=this.value;renderLib()});
@@ -305,7 +308,7 @@ function paraHTML(ci,pi){
 function isSb(t){return /^(\*\s*){3,}$|^-{3,}$|^_{3,}$|^✦$/.test(t)}
 function renderChapter(ci){
   var c=B.chapters[ci];var h='<h2>'+esc(c.title)+'</h2>';
-  c.paras.forEach(function(t,i){h+=isSb(t)?'<p class="sb" data-i="'+i+'">✦ ✦ ✦</p>':'<p class="para" data-i="'+i+'">'+paraHTML(ci,i)+'</p>'});
+  c.paras.forEach(function(t,i){h+=isSb(t)?'<p class="sb" data-i="'+i+'">✦ ✦ ✦</p>':t.slice(0,3)==='## '?'<p class="sub" data-i="'+i+'">'+esc(t.slice(3))+'</p>':'<p class="para'+(t.slice(0,2)==='• '?' li2':'')+'" data-i="'+i+'">'+paraHTML(ci,i)+'</p>'});
   col.innerHTML=h;
 }
 function layout(){
@@ -494,7 +497,7 @@ function chunks(t){var out=[],s=t.match(/[^.!?…]+[.!?…]*\s*/g)||[t],buf='';s
 function speakNow(){
   if(!tts.on||!B)return;var myid=tts.id;var c=B.chapters[tts.ch];
   if(tts.p>=c.paras.length){if(tts.ch+1<B.chapters.length){tts.ch++;tts.p=0;return speakNow()}else{ttsStop();toast('Kitap bitti');return}}
-  var txt=c.paras[tts.p];if(isSb(txt)){tts.p++;return speakNow()}
+  var txt=c.paras[tts.p].replace(/^## /,'').replace(/^• /,'');if(isSb(txt)){tts.p++;return speakNow()}
   if(cur.ch!==tts.ch)openChapter(tts.ch,tts.p);
   var el=col.querySelector('p[data-i="'+tts.p+'"]');
   var old=col.querySelector('.tts');if(old)old.classList.remove('tts');

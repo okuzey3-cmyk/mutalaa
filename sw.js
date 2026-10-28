@@ -1,4 +1,4 @@
-var C='satir-arasi-v1';
+var C='satir-arasi-v2';
 var SHELL=['./','index.html','manifest.json','icon-192.png','icon-512.png','books/books.json'];
 self.addEventListener('install',function(e){e.waitUntil(caches.open(C).then(function(c){return c.addAll(SHELL)}).catch(function(){}));self.skipWaiting()});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(function(x){return x!==C}).map(function(x){return caches.delete(x)}))}).then(function(){return self.clients.claim()}))});
