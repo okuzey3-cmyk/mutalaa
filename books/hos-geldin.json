@@ -1,0 +1,24 @@
+{
+ "id": "hos-geldin",
+ "title": "Satır Arası'na Hoş Geldin",
+ "author": "Satır Arası",
+ "chapters": [
+  {
+   "title": "Bir Kitaplık Fikri",
+   "text": "Kitaplar yalnızca okunmak için yazılmaz; yanında taşınmak, kaldığı yerden sürdürülmek, kenarına not düşülmek için de yazılır. Satır Arası bu fikirle yapıldı.\n\nBurası senin kütüphanen. Raflarda yalnızca senin kitapların durur. Bir kitabı açtığında uygulama kaldığın yeri hatırlar, sen kapattığında da yerini kaybetmez.\n\nBir sayfayı çevirmek için ekranın sağ kenarına dokun ya da parmağını sola kaydır. Geri dönmek için sol kenara dokun. Ekranın ortasına dokunursan üstte ve altta menüler açılır.\n\n* * *\n\nMenüyü kapatmak için yine ortaya dokunman yeterli. Bir kitabı okurken en çok işine yarayacak şey aslında hiçbir şeyin yolunu kesmemesidir; menüler de bu yüzden gizli durur."
+  },
+  {
+   "title": "Yazıyı Sana Göre Ayarla",
+   "text": "Alttaki Aa düğmesi görünümü ayarlamak içindir. Yazı boyutunu büyütüp küçültebilir, yazı tipini ve satır aralığını değiştirebilirsin.\n\nBeyaz, sepya, gece ve siyah olmak üzere dört tema var. Gündüz sepya gözü en az yoran seçenektir. Gece yatmadan önce okuyorsan gece ya da siyah tema, telefonun ışığını azaltır.\n\nBu ayarlar yalnızca bu telefonda saklanır. Başka bir cihazda uygulamayı açtığında oradaki ayarlar kendi başına durur.\n\nKitabın her sayfasında altta kaçıncı sayfada olduğunu, kitabın yüzde kaçını okuduğunu ve bitirmen için yaklaşık ne kadar süre kaldığını görürsün."
+  },
+  {
+   "title": "Notlar, Vurgular ve Ayraç",
+   "text": "Bir cümleye basılı tutarak onu seç. Üstte küçük bir çubuk açılır: dört renkten birine dokunursan cümle işaretlenir, Not'a dokunursan kendi düşünceni de yazabilirsin.\n\nÜstteki ayraç simgesi bulunduğun sayfaya kırmızı bir şerit takar. Aynı simgeye tekrar dokunursan şerit kalkar.\n\nAlttaki Notlarım düğmesi bütün vurgularını, notlarını ve ayraçlarını tek listede toplar. Birine dokunursan doğrudan o sayfaya gidersin. İstersen listeyi paylaşabilir ya da kopyalayabilirsin.\n\nÜstteki büyüteç kitabın içinde kelime aratır. Hoparlör simgesi ise kitabı sana sesli okur; hızını ayarlayabilir, durdurup devam ettirebilirsin."
+  },
+  {
+   "title": "Kendi Metnini Ekle",
+   "text": "Kitaplık ekranının sağ altındaki artı düğmesiyle telefonundan bir metin dosyası seçebilirsin. Dosya bölümlere ayrılır ve rafına eklenir.\n\nDosyada satır başına yazılmış bir başlık varsa, yani satırı bir kare işaretiyle başlıyorsa, bölümler bu başlıklardan ayrılır. Başlık yoksa uygulama metni kendisi okunur parçalara böler.\n\nBu şekilde eklenen kitaplar yalnızca o telefonda durur. Her cihazda görünmesini istediğin kitapları bana gönder, ben onları kütüphanenin kalıcı raflarına koyarım.\n\nİyi okumalar."
+  }
+ ],
+ "kelime": 322
+}

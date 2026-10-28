@@ -1,551 +1,536 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Mütalaa</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Satır Arası</title>
+<meta name="description" content="Satır Arası — kişisel kütüphane">
+<meta name="theme-color" content="#1b2233">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Satır Arası">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #14120f;
-    color: #f5efe4;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-  .screen { display: none; min-height: 100vh; }
-  .screen.active { display: block; }
-  #reader.active { display: flex; }
-
-  /* ---- ANA SAYFA ---- */
-  #home {
-    background-color: #ece0c4;
-    background-image:
-      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.35), transparent 55%),
-      radial-gradient(ellipse at 85% 90%, rgba(120,95,55,0.18), transparent 50%),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><path d='M20 40 Q80 10 140 60 T260 50' stroke='rgba(90,70,40,0.10)' stroke-width='1.5' fill='none'/><path d='M10 150 Q90 120 160 170 T280 160' stroke='rgba(90,70,40,0.08)' stroke-width='1.2' fill='none'/><path d='M30 240 Q100 210 180 250 T270 230' stroke='rgba(90,70,40,0.09)' stroke-width='1.3' fill='none'/></svg>");
-    background-size: cover, cover, 340px 340px;
-    color: #241f18; min-height: 100vh; padding: 18px 20px 90px; max-width: 480px; margin: 0 auto;
-  }
-  .top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
-  .brand { display: flex; align-items: center; gap: 8px; }
-  .logo-circle {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: #f2e9d2; border: 1.5px solid #a6772c;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .logo-circle svg { width: 18px; height: 18px; }
-  .brand-name { font-family: Georgia, serif; font-size: 16px; color: #5a4a30; font-weight: 700; }
-  .icon-btn { width: 20px; height: 20px; opacity: 0.55; }
-
-  .page-heading { font-family: Georgia, serif; font-size: 34px; font-weight: 700; color: #1a160f; margin-bottom: 20px; }
-
-  .tabs { display: flex; gap: 4px; border-bottom: 2px solid rgba(90,70,40,0.25); margin-bottom: 22px; position: relative; }
-  .tab-item {
-    font-size: 16px; font-weight: 700; color: #8a7a5c; padding: 10px 16px 12px;
-    cursor: pointer; font-family: Georgia, serif; position: relative; z-index: 1;
-  }
-  .tab-item.active {
-    color: #1a160f;
-    background: #f6eed7;
-    clip-path: polygon(0% 0%, 100% 0%, 97% 55%, 100% 100%, 3% 100%, 0% 45%);
-    margin-bottom: -2px; padding-bottom: 14px;
-  }
-
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
-
-  .featured {
-    background: linear-gradient(155deg, #ece0c8, #ddcda3);
-    border: 1px solid rgba(90,70,40,0.2);
-    border-radius: 10px; padding: 14px;
-    display: flex; gap: 16px; align-items: center; margin-bottom: 30px; cursor: pointer;
-    box-shadow: 0 4px 14px rgba(60,45,20,0.12);
-  }
-  .cover-thumb {
-    width: 68px; height: 96px; border-radius: 3px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; text-align: center;
-    padding: 10px 8px; position: relative;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.15);
-    border-left: 5px solid rgba(0,0,0,0.28);
-  }
-  .cover-thumb::before {
-    content: ''; position: absolute; inset: 5px;
-    border: 1px solid rgba(230,205,140,0.55);
-    pointer-events: none;
-  }
-  .cover-thumb .corner { position: absolute; width: 10px; height: 10px; border: 1.5px solid rgba(230,205,140,0.75); }
-  .cover-thumb .corner.tl { top: 4px; left: 4px; border-right: none; border-bottom: none; }
-  .cover-thumb .corner.tr { top: 4px; right: 4px; border-left: none; border-bottom: none; }
-  .cover-thumb .corner.bl { bottom: 4px; left: 4px; border-right: none; border-top: none; }
-  .cover-thumb .corner.br { bottom: 4px; right: 4px; border-left: none; border-top: none; }
-  .cover-thumb span { font-family: Georgia, serif; font-weight: 700; font-size: 12px; line-height: 1.3; color: #f5ecd6; letter-spacing: 0.02em; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
-  .featured-info { flex: 1; min-width: 0; }
-  .featured-info .f-title { font-family: Georgia, serif; font-size: 17px; font-weight: 700; color: #1a160f; line-height: 1.3; margin-bottom: 6px; }
-  .featured-info .f-meta { font-size: 12px; color: #6b5a3e; }
-  .featured-info .f-progress { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: #7a5a1f; margin-top: 8px; }
-
-  .section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-  .section-title { font-family: Georgia, serif; font-size: 21px; font-weight: 700; color: #1a160f; }
-  .section-title-italic { font-family: Georgia, serif; font-size: 23px; font-style: italic; font-weight: 400; color: #1a160f; }
-  .section-chevron { width: 18px; height: 18px; opacity: 0.4; }
-
-  .cover-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 26px; }
-  .cover-card { cursor: pointer; padding-left: 6px; }
-  .cover-card .cover-thumb { width: 100%; height: 138px; margin-bottom: 10px; border-left-width: 6px; }
-  .cover-card .cover-thumb::after {
-    content: ''; position: absolute; top: 3px; bottom: -3px; right: -5px; width: 5px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.3));
-    box-shadow: 2px 0 0 rgba(0,0,0,0.12);
-  }
-  .cover-card .c-title { font-size: 13px; font-weight: 700; color: #1a160f; line-height: 1.3; margin-bottom: 2px; }
-  .cover-card .c-meta { font-size: 11px; color: #7a6a4a; }
-
-  .filter-row { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; }
-  .filter-chip {
-    font-size: 12px; padding: 6px 13px; border-radius: 20px; white-space: nowrap;
-    border: 1px solid rgba(90,70,40,0.3); color: #6b5a3e; flex-shrink: 0; cursor: pointer;
-  }
-  .filter-chip.active { background: #2a2114; color: #f6eed7; border-color: #2a2114; }
-
-  .tabbar {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: #f2e9d2; border-top: 1px solid rgba(90,70,40,0.25);
-    display: flex; justify-content: space-around; padding: 10px 0 max(10px, env(safe-area-inset-bottom));
-    max-width: 480px; margin: 0 auto;
-  }
-  .tab-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0.55; color: #5a4a30; }
-  .tab-nav-item.active { opacity: 1; color: #a6772c; }
-  .tab-nav-item svg { width: 23px; height: 23px; }
-  .tab-nav-item span { font-size: 10px; font-weight: 700; font-family: Georgia, serif; }
-
-
-  /* ---- OKUMA / TAM EKRAN KİTAP ---- */
-  #reader {
-    position: fixed; inset: 0; z-index: 20;
-    background: #dcd3bd;
-    display: none;
-    flex-direction: column;
-  }
-  #reader.active { display: flex; }
-  .reader-top {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 18px; flex-shrink: 0;
-  }
-  .back-btn { font-size: 13px; color: #6b5a3e; cursor: pointer; }
-  .page-indicator { font-size: 12px; color: #8a7a5c; font-family: Georgia, serif; }
-
-  .book-wrap {
-    flex: 1; min-height: 0; position: relative; perspective: 2200px;
-    padding: 0 4px 4px; overflow: hidden;
-  }
-  .book { position: absolute; inset: 0 4px 4px; transform-style: preserve-3d; }
-
-  .page {
-    position: absolute; inset: 0;
-    background: #f7f1e3;
-    background-image: radial-gradient(ellipse at top left, rgba(255,255,255,0.5), transparent 60%);
-    color: #2b2420;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.15), 0 2px 14px rgba(0,0,0,0.2);
-    padding: 40px 26px 56px;
-    overflow-y: auto;
-    transform-origin: left center;
-    transform: rotateY(0deg);
-    backface-visibility: hidden;
-  }
-  .page.turning-fwd { animation: curlFwd 0.7s cubic-bezier(0.45,0.05,0.55,0.95) forwards; }
-  .page.turning-back { animation: curlBack 0.7s cubic-bezier(0.45,0.05,0.55,0.95) forwards; }
-  .page.flipped { transform: rotateY(-180deg); }
-
-  @keyframes curlFwd {
-    0%   { transform: rotateY(0deg) translateZ(0); box-shadow: -2px 0 10px rgba(0,0,0,0.15); }
-    45%  { transform: rotateY(-95deg) translateZ(30px) scaleY(0.985); box-shadow: -40px 10px 60px rgba(0,0,0,0.45); }
-    100% { transform: rotateY(-180deg) translateZ(0); box-shadow: -2px 0 10px rgba(0,0,0,0.15); }
-  }
-  @keyframes curlBack {
-    0%   { transform: rotateY(-180deg) translateZ(0); box-shadow: -2px 0 10px rgba(0,0,0,0.15); }
-    45%  { transform: rotateY(-85deg) translateZ(30px) scaleY(0.985); box-shadow: -40px 10px 60px rgba(0,0,0,0.45); }
-    100% { transform: rotateY(0deg) translateZ(0); box-shadow: -2px 0 10px rgba(0,0,0,0.15); }
-  }
-
-  .page-num { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; font-size: 11px; color: #a8977a; font-family: Georgia, serif; }
-  .page .eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #a6772c; margin-bottom: 10px; font-weight: 700; }
-  .page h3 { font-family: Georgia, serif; font-size: 22px; font-weight: 700; line-height: 1.35; margin-bottom: 18px; color: #17130c; }
-  .page p { font-family: Georgia, serif; font-size: 17px; font-weight: 600; line-height: 1.9; color: #221c15; text-align: justify; }
-  .page ul { font-family: Georgia, serif; font-size: 15px; font-weight: 600; line-height: 1.8; color: #221c15; padding-left: 20px; }
-
-  .nav-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px 22px; flex-shrink: 0; }
-  .nav-btn {
-    background: transparent; color: #4a3f2e; border: none;
-    font-size: 14px; font-family: Georgia, serif; padding: 8px 4px;
-  }
-  .nav-btn:disabled { opacity: 0.25; }
+:root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;background:var(--bg);color:var(--fg);-webkit-text-size-adjust:100%;transition:background .25s,color .25s}
+body[data-theme=beyaz]{--bg:#ffffff;--fg:#1d1d1f;--muted:#6e6e73;--card:#f2f2f4;--line:#e3e3e6;--acc:#b3261e;--bar:rgba(255,255,255,.96);--hl:#ffe066}
+body[data-theme=sepya]{--bg:#f4ecd8;--fg:#3b2f1e;--muted:#8a7a5f;--card:#ebe1c8;--line:#dccfae;--acc:#9c2a1c;--bar:rgba(244,236,216,.97);--hl:#f3c969}
+body[data-theme=gece]{--bg:#1b2233;--fg:#dfe3ec;--muted:#8d97ad;--card:#252d42;--line:#323b54;--acc:#e5645a;--bar:rgba(27,34,51,.97);--hl:#8a6d1c}
+body[data-theme=siyah]{--bg:#000;--fg:#c9c9cc;--muted:#76767b;--card:#141416;--line:#232326;--acc:#e5645a;--bar:rgba(0,0,0,.97);--hl:#6e5612}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+[hidden]{display:none!important}
+#lib,#rd{position:fixed;inset:0}
+#lib{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(var(--sat) + 18px) 18px calc(var(--sab) + 96px)}
+.brand{display:flex;align-items:baseline;gap:10px;margin:6px 2px 2px}
+.brand h1{font:700 30px/1 Georgia,"Times New Roman",serif;margin:0;letter-spacing:-.5px}
+.brand h1 i{color:var(--acc);font-style:normal}
+.brand small{color:var(--muted);font-size:13px;letter-spacing:.4px}
+.strip{display:flex;gap:10px;margin:14px 0 6px;overflow-x:auto;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;background:var(--card);border-radius:14px;padding:10px 14px;min-width:92px}
+.chip b{display:block;font-size:20px}
+.chip span{font-size:12px;color:var(--muted)}
+.cont{display:flex;gap:16px;background:var(--card);border-radius:18px;padding:14px;margin:14px 0 6px;align-items:center;width:100%;text-align:left}
+.cont .cover{width:72px;flex:0 0 72px}
+.cont h3{margin:0 0 3px;font:700 17px/1.25 Georgia,serif}
+.cont p{margin:0;color:var(--muted);font-size:13px}
+.bar{height:5px;border-radius:3px;background:var(--line);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc);border-radius:3px}
+.cont .go{margin-top:10px;display:inline-block;background:var(--acc);color:#fff;border-radius:20px;padding:7px 16px;font-size:14px;font-weight:600}
+.search{width:100%;margin:14px 0 8px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);font:inherit;font-size:16px;outline:0}
+.tabs{display:flex;gap:6px;margin:6px 0 14px;overflow-x:auto;scrollbar-width:none}
+.tabs button{padding:8px 15px;border-radius:20px;background:var(--card);font-size:14px;color:var(--muted);white-space:nowrap}
+.tabs button.on{background:var(--fg);color:var(--bg);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:20px 14px}
+.bk{display:block;align-self:start;text-align:left;position:relative}
+.bk .meta{margin-top:7px;font-size:12px;color:var(--muted);line-height:1.3}
+.bk .meta b{display:block;color:var(--fg);font-size:13px;font-weight:600;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.cover{position:relative;aspect-ratio:2/3;border-radius:4px 9px 9px 4px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.28),inset 4px 0 6px -2px rgba(0,0,0,.35);color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:12% 11% 10% 15%}
+.cover::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.18) 0,rgba(255,255,255,0) 7%,rgba(0,0,0,.18) 8%,rgba(0,0,0,0) 12%)}
+.cover .ct{font:700 14px/1.15 Georgia,serif;font:700 clamp(11px,13cqw,19px)/1.15 Georgia,serif;padding-right:16%;text-shadow:0 1px 3px rgba(0,0,0,.4);position:relative;word-break:break-word}
+.cover .ca{font-size:10px;font-size:clamp(8px,8cqw,11px);opacity:.85;letter-spacing:.6px;text-transform:uppercase;position:relative}
+.cover .rib{position:absolute;top:-2px;right:14%;width:11%;height:24%;background:#c0392b;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.cover .orn{position:relative;height:1px;width:100%;margin:8px 0 auto;background:rgba(255,255,255,.4)}
+.cw{container-type:inline-size}
+.pct{position:absolute;right:6px;bottom:48px;background:rgba(0,0,0,.65);color:#fff;border-radius:10px;font-size:11px;padding:2px 7px}
+.fab{position:fixed;right:18px;bottom:calc(var(--sab) + 20px);width:54px;height:54px;border-radius:27px;background:var(--acc);color:#fff;font-size:30px;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:5;display:flex;align-items:center;justify-content:center}
+.empty{color:var(--muted);text-align:center;padding:40px 10px}
+/* okuyucu */
+#rd{background:var(--bg);display:flex;flex-direction:column}
+#vp{position:absolute;left:0;right:0;top:calc(var(--sat) + 22px);bottom:calc(var(--sab) + 30px);overflow:hidden;touch-action:pan-y}
+#col{position:relative;column-fill:auto;transition:transform .22s ease;will-change:transform;hyphens:auto;-webkit-hyphens:auto;text-rendering:optimizeLegibility;user-select:text;-webkit-user-select:text}
+#col.nt{transition:none}
+#col h2{font-family:inherit;font-weight:700;font-size:1.35em;line-height:1.25;margin:.2em 0 1.1em;text-align:center;break-after:avoid}
+#col h2:before{content:"✦";display:block;color:var(--acc);font-size:.6em;margin-bottom:.6em;opacity:.8}
+#col p{margin:0;text-indent:1.4em;orphans:2;widows:2}
+#col p.first,#col h2+p{text-indent:0}
+#col p.sb{text-align:center;text-indent:0;margin:.9em 0;color:var(--muted);letter-spacing:.6em}
+#col p.tts{background:rgba(120,160,255,.18);border-radius:4px}
+#col mark{background:var(--hl);color:inherit;border-radius:2px;padding:0}
+#col mark[data-c="g"]{background:#9ad9a0;color:#102}
+#col mark[data-c="b"]{background:#9cc7f2;color:#102}
+#col mark[data-c="p"]{background:#f2a6c3;color:#102}
+#col mark.hn{border-bottom:2px solid var(--acc)}
+.foot{position:absolute;left:0;right:0;bottom:calc(var(--sab) + 6px);display:flex;justify-content:space-between;padding:0 22px;font-size:11.5px;color:var(--muted);pointer-events:none}
+.head{position:absolute;left:0;right:0;top:calc(var(--sat) + 4px);text-align:center;font-size:11.5px;color:var(--muted);pointer-events:none;padding:0 60px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rib2{position:absolute;top:calc(var(--sat) - 2px);right:22px;width:20px;height:34px;background:var(--acc);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);z-index:3;pointer-events:none}
+.top,.bot{position:absolute;left:0;right:0;background:var(--bar);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:10;transition:transform .22s}
+.top{top:0;padding:calc(var(--sat) + 6px) 8px 8px;display:flex;align-items:center;gap:2px;border-bottom:1px solid var(--line)}
+.top .ttl{flex:1;min-width:0;text-align:center;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px}
+.ib{width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;border-radius:12px;flex:0 0 42px}
+.ib:active{background:var(--card)}
+.ib.on{color:var(--acc)}
+.bot{bottom:0;padding:12px 18px calc(var(--sab) + 12px);border-top:1px solid var(--line)}
+.bot .rowi{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:4px}
+input[type=range]{width:100%;accent-color:var(--acc);margin:6px 0}
+body.nochrome .top{transform:translateY(-110%)}
+body.nochrome .bot{transform:translateY(110%)}
+body.nochrome .top,body.nochrome .bot{pointer-events:none}
+#selbar{position:fixed;left:50%;transform:translateX(-50%);top:calc(var(--sat) + 52px);background:var(--fg);color:var(--bg);border-radius:30px;padding:6px 8px;display:flex;gap:2px;align-items:center;z-index:30;box-shadow:0 6px 22px rgba(0,0,0,.4);max-width:96vw}
+#selbar button{padding:7px 10px;font-size:14px;border-radius:20px;white-space:nowrap}
+#selbar .dot{width:26px;height:26px;border-radius:13px;margin:0 3px;padding:0;border:2px solid rgba(255,255,255,.55)}
+#selbar .sep{width:1px;height:20px;background:currentColor;opacity:.25;margin:0 4px}
+/* sayfa altı paneller */
+.sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-height:82vh;background:var(--bg);color:var(--fg);border-radius:20px 20px 0 0;z-index:41;display:flex;flex-direction:column;padding-bottom:var(--sab);animation:up .22s ease;box-shadow:0 -8px 30px rgba(0,0,0,.35)}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.sheet header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px;font-weight:700;font-size:17px}
+.sheet .bd{overflow-y:auto;padding:0 18px 18px;-webkit-overflow-scrolling:touch}
+.li{display:block;width:100%;text-align:left;padding:13px 4px;border-bottom:1px solid var(--line);font-size:15px;line-height:1.35}
+.li small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.li.cur{color:var(--acc);font-weight:700}
+.li q{display:block;font-family:Georgia,serif;font-style:italic;quotes:none;margin-bottom:3px;padding-left:10px;border-left:3px solid var(--hl)}
+.set{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);gap:12px;font-size:15px}
+.seg{display:flex;background:var(--card);border-radius:10px;padding:3px;gap:2px}
+.seg button{padding:7px 12px;border-radius:8px;font-size:14px}
+.seg button.on{background:var(--fg);color:var(--bg);font-weight:600}
+.th{display:flex;gap:10px}
+.th button{width:44px;height:44px;border-radius:22px;border:2px solid var(--line);font-size:13px;font-weight:700}
+.th button.on{border-color:var(--acc)}
+textarea,.inp{width:100%;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;font-size:16px;outline:0}
+.btn{background:var(--acc);color:#fff;border-radius:12px;padding:12px 18px;font-weight:600;font-size:15px}
+.btn.g{background:var(--card);color:var(--fg)}
+.row{display:flex;gap:10px;margin-top:12px}
+.toast{position:fixed;left:50%;bottom:calc(var(--sab) + 90px);transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:22px;font-size:14px;z-index:60;max-width:88vw;text-align:center;animation:up .2s}
+.ttsbar{position:absolute;left:12px;right:12px;bottom:calc(var(--sab) + 40px);background:var(--fg);color:var(--bg);border-radius:30px;padding:8px 10px;display:flex;align-items:center;gap:6px;z-index:12;box-shadow:0 6px 22px rgba(0,0,0,.4)}
+.ttsbar span{flex:1;font-size:13px;padding-left:8px}
+.ttsbar button{padding:8px 12px;border-radius:20px;font-size:15px}
+.hint{font-size:12px;color:var(--muted);margin:10px 0}
 </style>
 </head>
-<body>
+<body data-theme="sepya">
+<section id="lib">
+  <div class="brand"><h1>Satır <i>Arası</i></h1><small>kişisel kütüphane</small></div>
+  <div class="strip" id="stats"></div>
+  <div id="contBox"></div>
+  <input class="search" id="q" type="search" placeholder="Kitap veya yazar ara…" autocomplete="off">
+  <div class="tabs" id="tabs"></div>
+  <div class="grid" id="grid"></div>
+  <button class="fab" id="add" aria-label="Kitap ekle">+</button>
+  <input type="file" id="file" accept=".txt,.md,.markdown,.html,.htm,text/plain" hidden>
+</section>
 
-<div id="home" class="screen active">
-  <div class="top-row">
-    <div class="brand">
-      <div class="logo-circle">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#a6772c" stroke-width="1.6"><path d="M3 5c2-1 5-1 7 0v14c-2-1-5-1-7 0V5Z"/><path d="M21 5c-2-1-5-1-7 0v14c2-1 5-1 7 0V5Z"/></svg>
-      </div>
-      <span class="brand-name">Mütalaa</span>
-    </div>
-    <svg class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="#4a3f2e" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+<section id="rd" hidden>
+  <div class="head" id="head"></div>
+  <div class="rib2" id="rib2" hidden></div>
+  <div id="vp"><div id="col"></div></div>
+  <div class="foot"><span id="fl"></span><span id="fr"></span></div>
+  <div class="top">
+    <button class="ib" id="bBack" aria-label="Geri">‹</button>
+    <div class="ttl" id="rTitle"></div>
+    <button class="ib" id="bBm" aria-label="Ayraç">🔖</button>
+    <button class="ib" id="bTts" aria-label="Sesli oku">🔊</button>
+    <button class="ib" id="bSearch" aria-label="Ara">🔍</button>
+    <button class="ib" id="bMenu" aria-label="Menü">☰</button>
   </div>
-
-  <div class="page-heading">Ana Sayfa</div>
-
-  <div class="tabs">
-    <span class="tab-item active" onclick="switchTab('bugun')">Bugün</span>
-    <span class="tab-item" onclick="switchTab('tumu')">Tüm Hikayeler</span>
+  <div class="bot">
+    <div class="rowi"><span id="bl"></span><span id="br"></span></div>
+    <input type="range" id="slider" min="0" max="1000" value="0">
+    <div class="rowi" style="margin:4px 0 0"><button id="bToc" style="color:var(--fg);font-size:14px">≡ İçindekiler</button><button id="bNotes" style="color:var(--fg);font-size:14px">✎ Notlarım</button><button id="bSet" style="color:var(--fg);font-size:15px;font-weight:700">Aa</button></div>
   </div>
-
-  <div id="panel-bugun" class="tab-panel active">
-    <div class="featured" onclick="openReader('eyyub')">
-      <div class="cover-thumb" style="background:linear-gradient(150deg,#1d9e75,#0f6e56);">
-        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-        <span>Hz. Eyyub'un Hikayesi</span>
-      </div>
-      <div class="featured-info">
-        <div class="f-title">Bir yolculuğun sabrı</div>
-        <div class="f-meta">peygamberler · 9 dakikalık okuma</div>
-        <div class="f-progress">BUGÜNÜN HİKAYESİ</div>
-      </div>
-    </div>
-
-    <div class="section-row">
-      <span class="section-title-italic">Bugün ayrıca okunabilir</span>
-    </div>
-    <div class="cover-grid">
-      <div class="cover-card" onclick="openReader('selman')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#d4832a,#a6772c);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Selman-ı Farisi</span></div>
-        <div class="c-title">Hakikat Peşinde</div>
-        <div class="c-meta">sahabe · 8 dk</div>
-      </div>
-      <div class="cover-card" onclick="openReader('uveys')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#c9578a,#8a3556);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Üveys el-Karani</span></div>
-        <div class="c-title">Görmeden Sevmek</div>
-        <div class="c-meta">tabiin · 7 dk</div>
-      </div>
-      <div class="cover-card" onclick="openReader('bilal')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#3a6ea8,#1f4c7a);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Bilal-i Habeşi</span></div>
-        <div class="c-title">Sesiyle Özgür Kalan Adam</div>
-        <div class="c-meta">sahabe · 9 dk</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="panel-tumu" class="tab-panel">
-    <div class="filter-row">
-      <span class="filter-chip active">tümü</span>
-      <span class="filter-chip">peygamberler</span>
-      <span class="filter-chip">sahabe</span>
-      <span class="filter-chip">tabiin</span>
-      <span class="filter-chip">evliyalar</span>
-      <span class="filter-chip">Ehl-i Beyt</span>
-    </div>
-    <div class="section-row">
-      <span class="section-title">Tüm hikayeler</span>
-    </div>
-    <div class="cover-grid">
-      <div class="cover-card" onclick="openReader('eyyub')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#1d9e75,#0f6e56);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Hz. Eyyub'un Hikayesi</span></div>
-        <div class="c-title">Bir yolculuğun sabrı</div>
-        <div class="c-meta">peygamberler · 9 dk</div>
-      </div>
-      <div class="cover-card" onclick="openReader('selman')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#d4832a,#a6772c);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Selman-ı Farisi</span></div>
-        <div class="c-title">Hakikat Peşinde</div>
-        <div class="c-meta">sahabe · 8 dk</div>
-      </div>
-      <div class="cover-card" onclick="openReader('uveys')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#c9578a,#8a3556);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Üveys el-Karani</span></div>
-        <div class="c-title">Görmeden Sevmek</div>
-        <div class="c-meta">tabiin · 7 dk</div>
-      </div>
-      <div class="cover-card" onclick="openReader('bilal')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#3a6ea8,#1f4c7a);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Bilal-i Habeşi</span></div>
-        <div class="c-title">Sesiyle Özgür Kalan Adam</div>
-        <div class="c-meta">sahabe · 9 dk</div>
-      </div>
-      <div class="cover-card" onclick="openReader('bayezid')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#6b5ca8,#453a7a);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Bayezid-i Bistami</span></div>
-        <div class="c-title">Benlikten Geçiş</div>
-        <div class="c-meta">evliyalar · 8 dk</div>
-      </div>
-      <div class="cover-card" onclick="openReader('ebueyyub')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#8a6a3a,#5c451f);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Ebû Eyyûb el-Ensârî</span></div>
-        <div class="c-title">Ev Sahibi Olan Sahabi</div>
-        <div class="c-meta">sahabe · 8 dk</div>
-      </div>
-      <div class="cover-card" onclick="openReader('hatice')">
-        <div class="cover-thumb" style="background:linear-gradient(150deg,#a8395a,#6e2038);"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>Hz. Hatice</span></div>
-        <div class="c-title">İlk İnanan Kalp</div>
-        <div class="c-meta">Ehl-i Beyt · 9 dk</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="tabbar">
-    <div class="tab-nav-item active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 21V10a6 6 0 0 1 12 0v11"/><path d="M6 21h12"/><circle cx="12" cy="13" r="1"/></svg>
-      <span>Ana Sayfa</span>
-    </div>
-    <div class="tab-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h4v16H4z"/><path d="M10 4h4v16h-4z"/><path d="M16 5l4-1 1 15-4 1z"/></svg>
-      <span>Kitaplarım</span>
-    </div>
-    <div class="tab-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-      <span>Ara</span>
-    </div>
-    <div class="tab-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 4c3-1.5 4.5 0 6 1.5C13.5 4 15 2.5 18 4v14c-3-1.5-4.5 0-6 1.5-1.5-1.5-3-3-6-1.5V4Z"/><path d="M9 8h6M9 11h6M9 14h4"/></svg>
-      <span>İstek Listesi</span>
-    </div>
-    <div class="tab-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="7" r="3.2"/><path d="M5 21c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/></svg>
-      <span>Hesap</span>
-    </div>
-  </div>
-</div>
-
-<div id="reader" class="screen">
-  <div class="reader-top">
-    <span class="back-btn" onclick="goHome()">← ana sayfa</span>
-    <span class="page-indicator" id="pageIndicator">1 / 3</span>
-  </div>
-
-  <div class="book-wrap">
-    <div class="book" id="book"></div>
-  </div>
-
-  <div class="nav-row">
-    <button class="nav-btn" id="prevBtn" onclick="prevPage()">‹ önceki sayfa</button>
-    <button class="nav-btn" id="nextBtn" onclick="nextPage()">sonraki sayfa ›</button>
-  </div>
-</div>
+  <div class="ttsbar" id="ttsbar" hidden><button id="tPrev">⏮</button><button id="tPlay">⏸</button><button id="tNext">⏭</button><span id="tInfo"></span><button id="tRate">1×</button><button id="tStop">✕</button></div>
+</section>
+<div id="selbar" hidden></div>
 
 <script>
-const stories = {
-  eyyub: {
-    title: "Bir yolculuğun sabrı: Hz. Eyyub'un hikayesi",
-    pages: [
-      "Bir insan düşünün: malı mülkü yerinde, çocukları sağlıklı, sağlığı yerinde. Sonra bir gün bunların hepsi elinden alınıyor — tek tek değil, art arda. İşte Hz. Eyyub'un hikayesi böyle başlar. Kur'an'da dört surede, sekiz ayette adı geçen bu peygamber, 'sabır' dendiğinde akla ilk gelen isimdir. Ama onun sabrı, sadece 'sessiz kalmak' değildi. Zor günlerinde bile Allah'a yönelmeyi hiç bırakmamasıydı.<br><br>Eyyub'un hikayesi, aslında hepimizin bir gün karşılaşabileceği bir soruyu ortaya koyar: elimizdeki her şey birden yok olsa, hâlâ aynı insan kalabilir miyiz?",
-      "Eyyub, önce servetini kaybetti. Sonra çocuklarını. En sonunda da bedenine ağır bir hastalık geldi. Kur'an, bu hastalığın ne olduğunu detaylandırmaz — sadece 'sıkıntı ve acı' olarak bahseder. Yıllar içinde anlatılagelen 'vücudunu kurtların sarması' gibi detaylar, aslında güvenilir kaynaklara dayanmıyor; bunlar sonradan eklenmiş rivayetler.<br><br>Kur'an'ın verdiği bilgiyle yetinmek, kıssayı en doğru haliyle anlamanın yoludur. Çünkü asıl mesaj, hastalığın türünde değil, insanın ona verdiği tepkide saklı.",
-      "Bu kadar ağır bir imtihanda bir insan ne yapar? Çoğu zaman öfkelenir, sorar: 'Neden ben?' Etrafındaki insanlara sitem eder, hatta bazen inancından şüphe etmeye başlar. Eyyub farklıydı. Kur'an'da onun duası şöyle aktarılır: 'Rabbim, başıma bela geldi, sen merhametlilerin en merhametlisisin.'<br><br>Dikkat edin — bu bir şikayet değil, bir sığınma. Eyyub, acısını inkar etmiyor; hissettiği gerçek acıyı gizlemiyor. Ama onu Allah'tan başka kimseye şikayet etmiyor. Bu ayrım, sabrın ne olduğunu anlamak için çok önemli.",
-      "Bir hadiste Hz. Eyyub şöyle tarif edilir: 'insanların en halimi, en sabırlısı ve öfkesini en çok yeneni.' Bu tanım bize önemli bir şey söylüyor: sabır, pasif bir teslimiyet değil. Aksine, öfkeyi hissedip onu kontrol edebilmek, çok daha zor ve aktif bir iç mücadeledir.<br><br>Yıllar süren bu zorlu dönemde, çevresindeki insanların çoğu ondan uzaklaştı. Ama Eyyub'un duruşu değişmedi. Acı çekerken bile nazik, sabırlı ve Allah'a bağlı kalabileceğini gösterdi — bu, günümüzde bile herkesin başarabileceği bir şey değil.",
-      "Sonunda Eyyub'un duası kabul oldu. Kur'an, ona şifa verildiğini ve kaybettiklerinin yerine yenilerinin, hatta daha fazlasının verildiğini anlatır. Bu detay önemli: Allah, sabrın karşılığını sadece 'eski haline döndürmek' ile değil, fazlasıyla ödüllendirerek verdi.<br><br>Ama hikayenin asıl mesajı burada bitmiyor. Çünkü sabrın karşılığı her zaman bu dünyada, bu kadar net görülmeyebilir. Eyyub'un hikayesi bir istisna değil, bir örnektir — sabrın anlamının sonuçta değil, duruşta olduğunu hatırlatan bir örnek.",
-      "Bugün 'Eyyub sabrı' dediğimizde, aslında bu duruşa işaret ediyoruz: acıyı inkar etmeden, ama ondan yıkılmadan yaşamaya devam edebilme gücü. Bu, hastalıkla, kayıpla, beklenmedik bir yıkımla karşılaşan her insanın kendinde arayabileceği bir şey.<br><br>Eyyub'un hikayesi bize şunu hatırlatıyor: sabır, acının olmadığını iddia etmek değildir. Acıyı yaşarken bile, doğru yerde durmayı seçmektir.",
-      "Eyyub'un kıssası, Kur'an'da başka peygamberlerin sıkıntılarıyla birlikte anılır — Yunus, Zekeriyya ve İsa aleyhisselamın çektikleriyle yan yana zikredilir. Müfessirler bunun tesadüf olmadığını söyler: bu kıssalar, zorluk çeken herkese, özellikle de son peygamber sallallahu aleyhi ve selleme bir teselli olarak aktarılmıştır.<br><br>Yani Eyyub'un hikayesi tek başına bir kıssa değil, sabrın peygamberler tarihindeki ortak bir dili gibidir. Her biri farklı bir acıyla sınandı, ama hepsi aynı duruşu gösterdi: Allah'a yönelmek, O'ndan başkasına şikayet etmemek.<br><br>Bazen en büyük imtihanlar, en büyük dersleri de beraberinde getirir — bu, sadece Eyyub'un değil, sabrı seçen herkesin hikayesidir."
-    ],
-    sources: [
-      "Kur'an-ı Kerim, Sâd Suresi, 41-44. ayetler",
-      "Kur'an-ı Kerim, Enbiya Suresi, 83-84. ayetler",
-      "İbn-i Ebî Şeybe, el-Musannef, III, 201 (hadis)",
-      "Diyanet İşleri Başkanlığı, Kur'an-ı Kerim Meali ve Tefsiri",
-      "Muhammed Ali es-Sâbûnî, Tefsirlerin Özü"
-    ]
-  },
-  selman: {
-    title: "Selman-ı Farisi: Hakikat Peşinde Bir Ömür",
-    pages: [
-      "Selman, İran'da Mecusi bir ailede doğdu. Zengin bir aileydi, babası bölgenin ileri gelenlerindendi. Ama Selman'ın içinde hep bir soru vardı: 'Gerçek din hangisi?' Bu soru, genç yaşta onu rahatsız etmeye başladı — çevresindeki hiçbir cevap onu tatmin etmiyordu.<br><br>Bu soru, sonunda onu ailesinin dininden koparıp, hayatının geri kalanını şekillendirecek uzun bir yolculuğa çıkardı. Kimse ona bu yolun nereye varacağını söylememişti; o sadece aramaya devam etti.",
-      "Önce Hristiyanlığa yöneldi. Bir kilisede rahiplerin yanında yıllarca hizmet etti, onlardan öğrendi, onlarla yaşadı. Her rahip ölürken ona bir sonraki öğretmeni işaret etti — Selman da o öğretmenin peşinden gitti, şehirden şehre.<br><br>Bu, kolay bir yolculuk değildi. Ailesinden, evinden, tanıdığı her şeyden uzaklaşmıştı. Ama içindeki soru onu durdurmadı. Sonunda son rahip ona şunu söyledi: 'Artık senin yolunda olan kimseyi tanımıyorum. Ama Arap topraklarından bir peygamber çıkacak, iki taşlık arasına hicret edecek.'",
-      "Bu sözler Selman'ı Arabistan'a götürdü. Ancak yolculukta beklenmedik bir şey oldu: bir kabile tarafından köle olarak satıldı. Yıllarca özgürlüğünü kaybetmiş halde yaşadı. Bir insanın hakikat arayışı, en beklenmedik anda en büyük bedeli isteyebilir.<br><br>Medine'ye köle olarak geldiğinde bile, aradığı işaretleri kontrol etmeyi bırakmadı. Ona anlatılan alametleri hafızasında taşıyordu — bir gün bulacağına inanıyordu. Her gün, her yeni yüzde o alametleri arıyordu; umudu hiç tükenmedi.",
-      "Nihayet Peygamber Efendimiz sallallahu aleyhi ve sellemi gördüğünde, ona anlatılan tüm işaretleri O'nda buldu ve hemen iman etti. Ama özgürlüğü hâlâ yoktu. Peygamber Efendimizin (s.a.v.) tavsiyesiyle, ashâb-ı kirâmın da katkısıyla — 300 hurma fidanı dikme ve belli bir bedel ödeme karşılığında — özgürlüğüne kavuştu.<br><br>Bu, İslam tarihinde ilk yazılı özgürlük anlaşmalarından biri olarak kabul edilir. Selman artık hem imanına hem de bedenine kavuşmuştu; yıllarca süren bir arayışın karşılığını almıştı.",
-      "Selman'ın katkıları burada bitmedi. Hendek Savaşı öncesi, Medine'yi çevreleyen bir hendek kazma fikrini getiren oydu — bu, Arap savaş geleneğinde görülmemiş bir taktikti ve savaşın seyrini değiştirdi. Onun bilgisi ve tecrübesi, ashâb-ı kirâm arasında ona özel bir saygı kazandırdı.<br><br>Zekası, ilmi ve ahlakıyla Peygamber Efendimizin (s.a.v.) övgüsüne mazhar oldu; artık sadece bir arayışçı değil, İslam toplumunun saygın bir üyesiydi. Bir zamanlar köle olan bu insan, artık İslam'ın en güvenilir isimlerinden biriydi.",
-      "Peygamber Efendimiz sallallahu aleyhi ve sellem onun için 'Selman bizden, Ehl-i Beyt'tendir' buyurdu. Bir hadiste de 'hakikat Süreyya yıldızında olsa bile Selman onu bulur' denildi — bu, onun arayışındaki azmi anlatan en güçlü ifadelerden biri.<br><br>Onun hikayesi, gerçek bir arayışın hiçbir bedeli çok görmediğini gösterir. Ailesinden, özgürlüğünden, yıllarından vazgeçti — ama aradığını bulduğunda, hepsinin değdiğini gördü. Bugün hâlâ 'hakikati arayan bir insan ne kadar ileri gidebilir?' sorusuna en güzel cevaplardan biri olarak anılıyor. Selman'ın hayatı, sabırla sürdürülen bir arayışın nereye varabileceğinin canlı bir örneğidir."
-    ],
-    sources: [
-      "TDV İslam Ansiklopedisi, \"Selmân-ı Fârisî\" maddesi",
-      "Ahmed b. Hanbel, el-Müsned"
-    ]
-  },
-  uveys: {
-    title: "Üveys el-Karani: Görmeden Sevmek",
-    pages: [
-      "Üveys, Yemen'de, Murad kabilesinin Karan koluna mensup sade bir gençti. Peygamber Efendimiz sallallahu aleyhi ve sellemin yaşadığı dönemde iman etti — ama İslam tarihinin en tanıdık isimlerinden biri olmasına rağmen, O'nu (s.a.v.) hiç göremedi.<br><br>Bu, kendi tercihi değildi. Hayatı, onu farklı bir sadakate yönlendirmişti: annesine olan bağlılığına.",
-      "Sebebi basitti ama derindi: annesi vardı ve gözleri görmüyordu. Üveys, ona bakmayı, hizmet etmeyi, yanında olmayı, Medine'ye gidip Peygamber Efendimizi (s.a.v.) görmekten daha önemli gördü. Bu bir iman eksikliği değildi — aksine, iki değeri bir arada taşıyabilmenin, hangisinin öncelikli olduğunu bilmenin bir işaretiydi.<br><br>Yıllarca bu sadakatle yaşadı; kimse onu tanımıyordu, kimse ondan bahsetmiyordu. Ama bir yerlerde, biri ondan zaten bahsetmişti.",
-      "Peygamber Efendimiz sallallahu aleyhi ve sellem, hayattayken bile ashâb-ı kirâmına ondan bahsetti: 'Karanlı Üveys size gelecek, ona iyi davranın, ondan dua isteyin.' Bu sözler, henüz kimsenin tanımadığı bir insan için söylenmiş büyük bir işaretti.<br><br>Yıllar sonra, Hz. Ömer radıyallahu anh halifeliği döneminde bunu hatırladı. Yemen'den gelen bir grup insana sordu: 'Aranızda Karanlı Üveys var mı?'",
-      "Üveys, kendini tanıtınca Hz. Ömer ondan dua istedi. Peygamber Efendimizin (s.a.v.) kendisi hakkında söylediklerini anlattı ona. Ama Üveys'in tepkisi beklenmedikti — insanların ilgisinden, şöhretinden rahatsız oldu.<br><br>Sessizce oradan ayrıldı. Bilinmeyi değil, sadakatini sürdürmeyi tercih etti. Bu, günümüzün 'görünür olma' kültürüne tam tersi bir duruştu.",
-      "Bir yıl sonra, Kufe'den hacca gelen birine Hz. Ömer, Üveys'in durumunu sordu. Adam onun yoksulluk içinde, sade bir hayat sürdüğünü söyledi. Hz. Ömer, ona Peygamber Efendimizden (s.a.v.) duyduklarını anlattı; adam da Kufe'ye dönünce Üveys'ten dua istedi.<br><br>Bu haber yayılınca, insanlar onu aramaya, ondan dua istemeye başladı. Üveys yine aynı tepkiyi verdi — bölgeyi terk etti, sade hayatına devam etti.",
-      "Peygamber Efendimiz sallallahu aleyhi ve sellem onun için 'tabiinin en hayırlısı' buyurdu. Onu hiç görmemiş olması, değerini hiç azaltmadı — belki de tam tersi, onun sadakatini daha da anlamlı kıldı.<br><br>Bu hikaye bize önemli bir şey hatırlatıyor: bir insanın kıymeti, görünürlükle değil, sadakatle ölçülür. Üveys, hiç tanınmadan, hiç bilinmeden, sadece doğru olanı yaparak, İslam tarihinin en saygın isimlerinden biri haline geldi. Onun hikayesi, bir insanın gördüğüyle değil, verdiği kararlarla büyük olabileceğini gösteriyor."
-    ],
-    sources: [
-      "TDV İslam Ansiklopedisi, \"Üveys el-Karanî\" maddesi",
-      "Ahmed b. Hanbel, el-Müsned",
-      "İbn Sa'd, et-Tabakâtü'l-kübrâ"
-    ]
-  },
-  bilal: {
-    title: "Bilal-i Habeşi: Sesiyle Özgür Kalan Adam",
-    pages: [
-      "Bilal, Mekke'de köle bir ailenin çocuğu olarak dünyaya geldi. Annesinin adı Hamâme, babasının adı Rebah'tı — Habeşistan kökenliydiler. Kimse o küçük çocuğun bir gün İslam'ın en tanıdık seslerinden biri olacağını düşünmemişti.<br><br>İslamiyet geldiğinde Bilal, bunu açıktan ilan eden ilk yedi kişiden biri oldu. Bu, o dönemde büyük bir cesaret gerektiriyordu — çünkü bir kölenin efendisine karşı gelmesi, ağır bir bedel demekti.",
-      "Efendisi Ümeyye b. Halef, Bilal'in imanından vazgeçmesi için ona ağır işkenceler yaptı. Onu kızgın çöl kumlarının üzerine yatırıp göğsüne büyük taşlar koydurdu, putların adını söylemesi için zorladı.<br><br>Ama Bilal'in söylediği tek kelime değişmedi: 'Ehad' — yani 'Bir'. Allah'ın tek olduğunu, başka hiçbir söze boyun eğmeyeceğini bu tek kelimeyle haykırıyordu. Peygamber Efendimiz sallallahu aleyhi ve sellem, onun bu şekilde işkence görmesine son derece üzülürdü.",
-      "Hz. Ebû Bekir radıyallahu anh, Bilal'in bu direncini görünce dayanamadı. Müslüman olmayan güçlü bir köleyi vererek — bazı rivayetlere göre de para karşılığında — Bilal'i Ümeyye'nin elinden kurtardı ve onu azat etti.<br><br>Hz. Ömer radıyallahu anh, yıllar sonra bu olayı hatırlayarak şöyle derdi: 'Ebû Bekir efendimizdir; efendimizi (Bilal'i) azat etmiştir.' Artık Bilal özgürdü — ve bu özgürlüğü, hayatını Peygamber Efendimize (s.a.v.) adamakla değerlendirdi.",
-      "Müslümanlar arasında ezan okuma âdeti başlayınca, Peygamber Efendimiz sallallahu aleyhi ve sellem ezanı Bilal'e öğretti ve ilk defa o okudu. Böylece Bilal, İslam'ın ilk müezzini oldu — sesi, güçlü ve gür olduğu için özellikle seçilmişti.<br><br>Bir sabah ezanına kendiliğinden 'es-salâtü hayrun minennevm' (namaz uykudan hayırlıdır) sözlerini ekledi. Peygamber Efendimiz bundan memnun kaldı ve bu eklemenin her sabah tekrar edilmesine izin verdi. Bugün hâlâ dünyanın her yerinde sabah ezanlarında bu sözler okunuyor.",
-      "Bilal, Bedir, Uhud ve Hendek dahil bütün savaşlara katıldı; hazarda ve seferde Peygamber Efendimizin (s.a.v.) yanından ayrılmadı. Mekke'nin fethinde ise en unutulmaz anlardan birini yaşadı: Kâbe'nin damına çıkarak fetih ezanını okudu.<br><br>Bir zamanlar bu şehirde inancı yüzünden işkence görmüş, göç etmek zorunda kalmış bir köleydi. Şimdi aynı şehrin göklerinde Allah'ın adını haykırıyordu. Bu an, onun hayatındaki en büyük dönüşümlerden biriydi.",
-      "Peygamber Efendimiz sallallahu aleyhi ve sellem vefat edince, Bilal artık ezan okuyamaz oldu — sesi her seferinde ona olan hasretini hatırlatıyordu. Şam'a yerleşti; ama bir gün gördüğü bir rüya üzerine Medine'ye geldi ve bir kez daha ezan okudu. Onun sesini duyan halk, Peygamber Efendimizin yaşadığı günleri hatırlayarak sokaklara döküldü.<br><br>Bilal'in hikayesi bize şunu hatırlatıyor: bir insanın değeri, doğduğu yerle ya da statüsüyle değil, imanındaki sağlamlıkla ölçülür. Bir köle olarak başlayan bu hayat, İslam tarihinin en saygın seslerinden biri olarak sona erdi."
-    ],
-    sources: [
-      "TDV İslam Ansiklopedisi, \"Bilâl-i Habeşî\" maddesi",
-      "Buhârî, Feżâʾilü aṣḥâbi'n-nebî, 23",
-      "Semerkand Yayınları, Hayatü's Sahabe (4 Cilt Takım)"
-    ]
-  },
-  bayezid: {
-    title: "Bayezid-i Bistami: Benlikten Geçiş",
-    pages: [
-      "Bayezid, İran'ın Horasan eyaletindeki Bistam kasabasında doğdu. Asıl adı Tayfur'du; babası İsa, dindarlığıyla tanınan bir insandı. Dedesi Sürûşân ise aslen Mecusi bir din adamıyken sonradan Müslüman olmuştu.<br><br>Üç kardeşten ortancasıydı, hepsi de âbid ve zâhid (ibadete düşkün, dünyaya karşı sade) bir hayat sürüyordu. Ama Tayfur, zamanla hepsinden farklı bir yola girecek ve 'Sultânü'l-ârifîn' — ariflerin sultanı — unvanıyla anılacaktı.",
-      "Gençliğinde ilim ve feyz almak için pek çok âlimin yanında bulundu. Kaynaklar, onun tasavvuf yolunda yüzlerce üstaddan ders aldığını aktarır — ama bu bilgilerin çoğu, tarihi kayıtlardan çok, sonraki nesillerin aktardığı menkıbelere (nakledilen anlatılara) dayanır.<br><br>Bunu özellikle belirtmek önemli: TDV İslam Ansiklopedisi'nin de vurguladığı gibi, Bayezid hakkındaki bilgilerin büyük kısmı hayatının kesin kronolojisinden çok, sözleri ve menkıbeleri etrafında şekillenmiştir.",
-      "Bayezid'in tasavvuftaki yeri, 'sekr' (ilahi aşkla kendinden geçme) ve 'fena' (benlikten sıyrılma) kavramlarını derinlemesine yaşaması ve anlatmasıyla bilinir. Onun sözleri, sonraki yüzyıllarda pek çok mutasavvıfı etkiledi.<br><br>Bir keresinde kendisine 'bu derecelere nasıl kavuştunuz?' diye sorulduğunda şöyle cevap verdiği nakledilir: 'Her yerde Allah'ın gördüğünü ve bildiğini düşünüp, edebe riayet etmekle.' Bu sözler, onun tüm öğretisinin özeti gibidir: sürekli bir farkındalık hali.",
-      "Bayezid'e atfedilen en meşhur anlatılardan biri, ruhunun göklere çıkarıldığı ve kendisine 'Bayezid'in mirâcı' denilen bir manevi yolculuktur. Bu anlatıya göre, Allah'a yaklaşmanın yolunun Peygamber Efendimize sallallahu aleyhi ve selleme tabi olmaktan geçtiği kendisine bildirilmiştir.<br><br>Bu tür anlatılar, tasavvuf edebiyatının menkıbe geleneğine aittir — yani sembolik ve öğretici anlatılardır, tarihi olay olarak değil, manevi bir ders olarak okunmalıdır. Mütalaa'da bu ayrımı her zaman net tutmaya özen gösteriyoruz.",
-      "Bir başka anlatıya göre Bayezid, yakınlarının çok övdüğü bir 'veli'yi ziyarete gitmiş, ama o kişinin kıbleye karşı tükürdüğünü görünce hiç konuşmadan geri dönmüştür. Sonra şöyle demiştir: 'Dinin hükümlerini yerine getirmekte, sünnete uymakta zayıf olan birine nasıl veli denilir?'<br><br>Bu anlatı, tasavvuf yolunda en yüksek makamların bile sünnete bağlılıktan ayrı düşünülemeyeceğini vurgular — Bayezid'in öğretisinin merkezinde hep bu denge vardı.",
-      "Bayezid-i Bistami, Bistam'da vefat etti; vefat tarihi kaynaklarda farklı şekillerde aktarılsa da, en eski ve birincil kaynak kabul edilen Sehlegî'nin bilgisine göre 234 (848) yılında, yetmiş üç yaşında hayata gözlerini yumdu.<br><br>Onun mirası, sözleri ve öğretisiyle yüzyıllar boyunca yaşadı. Türbesi bugün hâlâ ziyaret edilen bir yer. Bayezid'in hikayesi bize, tasavvufun en yüksek makamlarının bile sade bir edep ve sünnete bağlılıktan geçtiğini hatırlatıyor."
-    ],
-    sources: [
-      "Süleyman Uludağ, \"Bâyezîd-i Bistâmî\", TDV İslâm Ansiklopedisi",
-      "Semerkand Yayınları, Arifler Sultanı Bayezid-i Bistami (Ciltli); Hayatı ve Menkıbeleri"
-    ]
-  },
-  ebueyyub: {
-    title: "Ebû Eyyûb el-Ensârî: Ev Sahibi Olan Sahabi",
-    pages: [
-      "Asıl adı Hâlid b. Zeyd olan Ebû Eyyûb, Medineli Hazrec kabilesinin Neccaroğulları koluna mensuptu. Hicretten iki yıl kadar önce eşi Ümmü Eyyûb ile birlikte iman etti ve ensardan İslamiyet'i ilk kabul edenler arasına girdi.<br><br>Ama onun asıl tanındığı olay, Peygamber Efendimiz sallallahu aleyhi ve sellemin Mekke'den Medine'ye hicreti sırasında yaşandı — ve bu olay, onu tarihe 'ev sahibi sahabi' olarak geçirdi.",
-      "Medine'ye ulaşan Peygamber Efendimiz sallallahu aleyhi ve sellemin devesi, şehre girince kendiliğinden yürüdü ve bir yerde durdu. Rivayete göre Efendimiz (s.a.v.), devenin durduğu yeri bekleyip 'devenin duracağı yer, onun sahibinin evi olsun' buyurdu.<br><br>Deve, Ebû Eyyûb'un evinin önünde durdu. Böylece Peygamber Efendimiz sallallahu aleyhi ve sellem, Medine'deki ilk günlerinde Ebû Eyyûb'un evinde misafir oldu — bu, Ebû Eyyûb için hayatının en büyük şerefiydi.",
-      "Ebû Eyyûb, bu misafirliğin her anında büyük bir hassasiyet gösterdi. Rivayete göre evinin alt katını Peygamber Efendimize (s.a.v.) ayırmak istedi, ama Efendimiz üst katta kalmayı tercih etti; Ebû Eyyûb yine de O'nun üzerinde yürümekten çekindiği için geceleri evin alt katında sessizce beklerdi.<br><br>Bu küçük ayrıntı bile, sahabenin Peygamber Efendimize sallallahu aleyhi ve selleme duyduğu derin saygıyı gösterir. Ebû Eyyûb, aylarca süren bu misafirlik boyunca Efendimize her türlü hizmeti bizzat kendisi yapmaya özen gösterdi.",
-      "Peygamber Efendimiz sallallahu aleyhi ve sellem, Ebû Eyyûb ile sahabeden Mus'ab b. Umeyr arasında kardeşlik bağı (muâhât) kurdu. Ebû Eyyûb, bundan sonra Bedir, Uhud, Hendek, Hayber, Mekke'nin fethi ve Huneyn dahil, Efendimizin katıldığı bütün savaşlara katıldı.<br><br>Sağlıklı olan herkesin Allah yolunda cihada katılması gerektiğine inanırdı; bu yüzden yaşlılık döneminde bile her yıl bir seferde bulunmaya gayret etti. Bu inancı, hayatının son yıllarına kadar hiç değişmedi.",
-      "Katıldığı seferlerin sonuncusu, Müslümanların ilk İstanbul kuşatması oldu. O dönemde doksanlı yaşlarına yaklaşmıştı, ama yine de sefere katılmaktan geri durmadı. Kuşatma devam ederken hastalandı ve orada, İstanbul surlarının yakınında vefat etti.<br><br>Vasiyeti üzerine, cenazesi surlara mümkün olduğunca yakın bir yere defnedildi. Rivayete göre bu vasiyeti, Müslümanların bir gün o toprakları fethedeceğine olan inancından kaynaklanıyordu.",
-      "Yüzyıllar sonra, İstanbul'un fethi sırasında Fatih Sultan Mehmed'in hocası Akşemseddin, Ebû Eyyûb'un kabrini keşfetti; Fatih Sultan Mehmed bu kabrin üzerine bir türbe ve külliye yaptırdı. Bugün İstanbul'da 'Eyüpsultan' adıyla anılan ilçe, adını ondan alır.<br><br>Ebû Eyyûb'un hikayesi bize şunu hatırlatıyor: bazen tarihe geçen büyük bir hizmet, evinin kapısını açmak kadar sade bir davranışla başlayabilir. Onun misafirperverliği ve sadakati, asırlar sonra bile hâlâ hatırlanıyor."
-    ],
-    sources: [
-      "Hasan Güleç, \"Ebû Eyyûb el-Ensârî\", TDV İslâm Ansiklopedisi",
-      "İbn Sa'd, et-Tabakâtü'l-kübrâ",
-      "Semerkand Yayınları, Hayatü's Sahabe (4 Cilt Takım)"
-    ]
-  },
-  hatice: {
-    title: "Hz. Hatice radıyallahu anha: İlk İnanan Kalp",
-    pages: [
-      "Hatice binti Hüveylid, Mekke'nin saygın ailelerinden Benî Esed'e mensuptu. Babası Hüveylid, Mekkelilerin önemli meselelerde görüşüne başvurduğu etkili bir şahsiyetti. Hatice, dürüstlüğü ve güvenilirliğiyle şehirde tanınan başarılı bir tüccardı.<br><br>Daha önce iki evlilik yapmış, her ikisinde de eşini kaybetmişti. Kureyş'in ileri gelenlerinden pek çok evlilik teklifi aldı, ama çocuklarının terbiyesini ve ticaretini kendisi yürütebilmek için bu teklifleri kabul etmedi.",
-      "Hatice, ticaret kervanlarını yönetmek için güvenilir birine ihtiyaç duyuyordu. Kendisine tavsiye edilen genç Muhammed'in — sallallahu aleyhi ve sellem — dürüstlüğünü ve güzel ahlakını duyunca, ona bir kervan işi teklif etti. Bu kervan yolculuğu büyük bir kazançla sonuçlandı.<br><br>Hatice, onun şerefli soyu, güvenilirliği, doğru sözlülüğü ve alışverişteki dürüstlüğü sebebiyle kendisine evlenme teklif etti. Peygamber Efendimiz sallallahu aleyhi ve sellem bunu amcalarına danıştı, onların onayını aldıktan sonra evlilik gerçekleşti. Hatice o dönemde kırk, Efendimiz ise yirmi beş yaşındaydı.",
-      "Bu evlilik, Hatice radıyallahu anha vefat edinceye kadar, yaklaşık yirmi beş yıl sürdü. Peygamber Efendimiz sallallahu aleyhi ve sellem, hayatı boyunca başka bir kadınla evlenmedi ve daha sonraki eşlerinden hiçbirini Hatice'ye denk görmediğini defalarca dile getirdi.<br><br>İbrahim dışındaki bütün çocukları — Kasım, Abdullah, Zeyneb, Rukayye, Ümmü Gülsüm ve Fatıma — Hatice'den dünyaya geldi. O, Efendimizin diğer hanımları arasında kendisini peygamberlik gelmeden önce tanıyan tek eşiydi.",
-      "Peygamberlik Hira Mağarası'nda Efendimize bildirildiğinde, korku ve endişe içinde eve döndü. Hatice radıyallahu anha, onu sakinleştiren ilk kişi oldu. Ona 'Allah seni asla utandırmaz; sen akrabanı gözetir, doğru söylersin, yoksula yardım edersin, misafiri ağırlarsın' diyerek güven verdi.<br><br>Kısa süre sonra, Peygamber Efendimiz sallallahu aleyhi ve sellemin getirdiği dine iman eden ilk kişi Hatice oldu — bütün insanlar arasında, kadın erkek ayrımı olmaksızın, İslam'ı ilk kabul eden oydu.",
-      "İman ettikten sonra Hatice, müşriklerin baskısı ve zulmü karşısında Peygamber Efendimizi sallallahu aleyhi ve sellem hiçbir zaman yalnız bırakmadı. Mekkeli müşrikler Müslümanları Şi'b-i Ebî Talib'de boykota tabi tuttuğunda, Hatice de Efendimizle birlikte iki üç yıl süren bu ağır boykota göğüs gerdi.<br><br>Sahip olduğu bütün servetini, İslam davasının yayılması ve zor durumdaki Müslümanlara yardım için harcadı. Zenginliğiyle başladığı bu yolculuğu, elindeki her şeyi vererek sürdürdü.",
-      "Hatice radıyallahu anha, hicretten üç yıl önce, altmış üç yaşındayken vefat etti. Aynı yıl Peygamber Efendimizin amcası Ebû Talib de vefat etmişti; bu yüzden o yıla 'hüzün yılı' (senetü'l-hüzn) denildi — Efendimiz, kendisini destekleyen iki büyük dayanağını aynı yıl kaybetmişti.<br><br>Yıllar sonra bile Peygamber Efendimiz sallallahu aleyhi ve sellem, Hatice'yi minnet ve sevgiyle anmaya devam etti. Onun hikayesi bize, sadakatin ve imanın en zor zamanlarda bile bir insana nasıl güç verebileceğini gösteriyor."
-    ],
-    sources: [
-      "M. Yaşar Kandemir, \"Hatice\", TDV İslâm Ansiklopedisi",
-      "İbn Sa'd, et-Tabakâtü'l-kübrâ",
-      "Buhârî, Bedʾü'l-vahy"
-    ]
-  }
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)};
+var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t,ms){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},ms||2200)}
+function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+
+/* ---------- ayarlar ---------- */
+var dark=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches;
+var S=Object.assign({theme:dark?'gece':'sepya',size:19,font:'serif',lh:1.6,margin:22,justify:true,rate:1},LS.get('sa_set',{}));
+var FONTS={serif:'"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Noto Serif",serif',sans:'-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif',kitap:'Georgia,"Times New Roman",serif'};
+function applyTheme(){document.body.dataset.theme=S.theme;var m=document.querySelector('meta[name=theme-color]');if(m)m.content={beyaz:'#ffffff',sepya:'#f4ecd8',gece:'#1b2233',siyah:'#000000'}[S.theme]}
+function saveS(){LS.set('sa_set',S)}
+applyTheme();
+
+/* ---------- IndexedDB (kendi eklediğin kitaplar) ---------- */
+var idb=null;
+function idbOpen(){return new Promise(function(res){try{var r=indexedDB.open('satirarasi',1);r.onupgradeneeded=function(){r.result.createObjectStore('books',{keyPath:'id'})};r.onsuccess=function(){idb=r.result;res(idb)};r.onerror=function(){res(null)}}catch(e){res(null)}})}
+function idbAll(){return new Promise(function(res){if(!idb)return res([]);var o=[];var c=idb.transaction('books').objectStore('books').openCursor();c.onsuccess=function(){var x=c.result;if(x){o.push(x.value);x.continue()}else res(o)};c.onerror=function(){res(o)}})}
+function idbPut(b){return new Promise(function(res){if(!idb)return res();var t=idb.transaction('books','readwrite');t.objectStore('books').put(b);t.oncomplete=res;t.onerror=res})}
+function idbDel(id){return new Promise(function(res){if(!idb)return res();var t=idb.transaction('books','readwrite');t.objectStore('books').delete(id);t.oncomplete=res;t.onerror=res})}
+
+/* ---------- kitaplık ---------- */
+var PAL=[['#7b2d26','#3d1411'],['#1f3b57','#0d1b2a'],['#2d5a4a','#10281f'],['#5b3a6e','#241230'],['#8a5a1f','#3a230a'],['#37474f','#12191c'],['#8c2f4a','#35101c'],['#2a4d69','#0b1d2c']];
+function hash(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)}
+var LIST=[];var tab='tum';var qtext='';
+function pos(id){return LS.get('sa_pos_'+id,null)}
+function pctOf(id){var p=pos(id);return p?Math.round((p.pct||0)*100):0}
+function state(id){var p=pos(id);if(!p)return 'sirada';return (p.pct||0)>=0.98?'bitti':'okuyorum'}
+function coverHTML(b){var c=b.renk||PAL[hash(b.title)%PAL.length];var t=b.title;return '<div class="cw"><div class="cover" style="background:linear-gradient(150deg,'+c[0]+','+c[1]+')"><div class="rib"></div><div class="ct">'+esc(t)+'</div><div class="orn"></div><div class="ca">'+esc(b.author||'')+'</div></div></div>'}
+function loadList(){
+  return fetch('books/books.json',{cache:'no-cache'}).then(function(r){return r.json()}).catch(function(){var c=LS.get('sa_listcache',null);return c||{kitaplar:[]}}).then(function(j){
+    LS.set('sa_listcache',j);
+    return idbAll().then(function(loc){LIST=(j.kitaplar||[]).map(function(b){b.local=false;return b}).concat(loc.map(function(b){return {id:b.id,title:b.title,author:b.author,kelime:b.kelime,local:true,renk:b.renk}}));renderLib()});
+  });
+}
+function statsHTML(){
+  var st=LS.get('sa_stats',{});var t=today();var day=st[t]||0;
+  var week=0,d=new Date();for(var i=0;i<7;i++){var k=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);week+=st[k]||0;d.setDate(d.getDate()-1)}
+  var streak=0;d=new Date();if(!(st[t]>=60))d.setDate(d.getDate()-1);
+  for(;;){var k2=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);if((st[k2]||0)>=60){streak++;d.setDate(d.getDate()-1)}else break}
+  var done=LIST.filter(function(b){return state(b.id)==='bitti'}).length;
+  function m(s){return Math.round(s/60)}
+  return '<div class="chip"><b>'+m(day)+' dk</b><span>bugün</span></div><div class="chip"><b>'+m(week)+' dk</b><span>bu hafta</span></div><div class="chip"><b>'+streak+' gün</b><span>üst üste</span></div><div class="chip"><b>'+done+'</b><span>biten kitap</span></div>'
+}
+function renderLib(){
+  $('#stats').innerHTML=statsHTML();
+  var last=LS.get('sa_last',null);var lb=last&&LIST.filter(function(b){return b.id===last})[0];
+  if(lb&&state(lb.id)==='okuyorum'){var p=pctOf(lb.id);$('#contBox').innerHTML='<button class="cont" data-open="'+esc(lb.id)+'"><div style="width:72px;flex:0 0 72px">'+coverHTML(lb)+'</div><div style="flex:1;min-width:0"><p>Kaldığın yerden devam et</p><h3>'+esc(lb.title)+'</h3><p>'+esc(lb.author||'')+'</p><div class="bar"><i style="width:'+p+'%"></i></div><span class="go">Devam · %'+p+'</span></div></button>'}else $('#contBox').innerHTML='';
+  var names={tum:'Tümü',okuyorum:'Okuyorum',sirada:'Sırada',bitti:'Bitti'};
+  $('#tabs').innerHTML=Object.keys(names).map(function(k){return '<button data-tab="'+k+'" class="'+(tab===k?'on':'')+'">'+names[k]+'</button>'}).join('');
+  var q=qtext.toLowerCase();
+  var items=LIST.filter(function(b){return (tab==='tum'||state(b.id)===tab)&&(!q||(b.title+' '+(b.author||'')).toLowerCase().indexOf(q)>=0)});
+  $('#grid').innerHTML=items.length?items.map(function(b){var p=pctOf(b.id);return '<button class="bk" data-open="'+esc(b.id)+'">'+coverHTML(b)+(p>0&&p<98?'<span class="pct">%'+p+'</span>':'')+(p>=98?'<span class="pct">✓ bitti</span>':'')+'<div class="meta"><b>'+esc(b.title)+'</b>'+esc(b.author||'')+(b.kelime?' · '+Math.max(1,Math.round(b.kelime/220/60*10)/10)+' sa':'')+'</div></button>'}).join(''):'<div class="empty" style="grid-column:1/-1">'+(LIST.length?'Bu rafta kitap yok.':'Henüz kitap yok. Sağ alttaki + ile kendi metnini ekleyebilirsin.')+'</div>';
+}
+$('#tabs').addEventListener('click',function(e){var t=e.target.closest('[data-tab]');if(t){tab=t.dataset.tab;renderLib()}});
+$('#q').addEventListener('input',function(){qtext=this.value;renderLib()});
+$('#lib').addEventListener('click',function(e){var o=e.target.closest('[data-open]');if(o)openBook(o.dataset.open)});
+var pressT=null;
+$('#grid').addEventListener('contextmenu',function(e){var o=e.target.closest('[data-open]');if(!o)return;e.preventDefault();bookMenu(o.dataset.open)});
+
+function bookMenu(id){
+  var b=LIST.filter(function(x){return x.id===id})[0];if(!b)return;
+  var h='<button class="li" data-a="reset">Okuma ilerlemesini sıfırla</button><button class="li" data-a="done">Bitti olarak işaretle</button>';
+  if(b.local)h+='<button class="li" data-a="del" style="color:var(--acc)">Kitabı sil</button>';
+  sheet(b.title,h,function(e){var a=e.target.closest('[data-a]');if(!a)return;a=a.dataset.a;
+    if(a==='reset'){localStorage.removeItem('sa_pos_'+id);toast('Sıfırlandı')}
+    if(a==='done'){LS.set('sa_pos_'+id,{ch:0,p:0,pct:1,t:Date.now()});toast('Bitti olarak işaretlendi')}
+    if(a==='del'){if(confirm('Bu kitap silinsin mi?')){idbDel(id).then(loadList)}}
+    closeSheet();renderLib()});
+}
+/* basılı tutunca menü */
+$('#grid').addEventListener('touchstart',function(e){var o=e.target.closest('[data-open]');if(!o)return;pressT=setTimeout(function(){pressT=null;o.dataset.lp='1';bookMenu(o.dataset.open)},600)},{passive:true});
+$('#grid').addEventListener('touchend',function(e){if(pressT){clearTimeout(pressT);pressT=null}var o=e.target.closest('[data-open]');if(o&&o.dataset.lp){delete o.dataset.lp;e.preventDefault()}});
+$('#grid').addEventListener('touchmove',function(){if(pressT){clearTimeout(pressT);pressT=null}},{passive:true});
+
+/* kitap ekleme */
+$('#add').onclick=function(){$('#file').click()};
+$('#file').onchange=function(){
+  var f=this.files[0];this.value='';if(!f)return;
+  var r=new FileReader();r.onload=function(){
+    var txt=String(r.result);if(/\.html?$/i.test(f.name)){txt=txt.replace(/<(script|style)[\s\S]*?<\/\1>/gi,'').replace(/<\/(p|div|h\d|li|br)>/gi,'\n\n').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,'')}
+    var title=f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ');
+    var b=parseText(txt,title);idbPut(b).then(function(){toast('Eklendi: '+b.title);return loadList()});
+  };r.readAsText(f,'utf-8');
+};
+function parseText(txt,title){
+  txt=txt.replace(/\r/g,'').trim();var lines=txt.split('\n');var ch=[],cur=null;
+  lines.forEach(function(l){var m=l.match(/^#{1,2}\s+(.+)/)||l.match(/^((?:BÖLÜM|Bölüm|KISIM|Kısım)\s+[\dIVXLC]+.*)$/);
+    if(m){cur={title:m[1].trim(),text:''};ch.push(cur)}else{if(!cur){cur={title:'Başlangıç',text:''};ch.push(cur)}cur.text+=l+'\n'}});
+  if(ch.length<=1){var all=txt.replace(/^#\s+.*\n/,'');var ps=all.split(/\n{2,}/),n=0,k=1;ch=[];var buf=[];ps.forEach(function(p){buf.push(p);n+=p.length;if(n>9000){ch.push({title:'Bölüm '+k++,text:buf.join('\n\n')});buf=[];n=0}});if(buf.length)ch.push({title:'Bölüm '+k,text:buf.join('\n\n')});if(ch.length===1)ch[0].title=title}
+  var words=txt.split(/\s+/).length;
+  return {id:'yerel-'+hash(title+words).toString(36),title:title,author:'Kendi kitabım',kelime:words,chapters:ch.map(function(c){return {title:c.title,text:c.text.trim().replace(/\*\*|__/g,'').replace(/(^|\s)\*([^*\n]+)\*/g,'$1$2')}})};
+}
+
+/* ---------- sheet ---------- */
+var sheetEl=null;
+function sheet(title,html,onclick){
+  closeSheet();var bg=document.createElement('div');bg.className='sheetbg';var sh=document.createElement('div');sh.className='sheet';
+  sh.innerHTML='<header><span>'+esc(title)+'</span><button class="ib" data-x style="width:34px;height:34px">✕</button></header><div class="bd">'+html+'</div>';
+  document.body.appendChild(bg);document.body.appendChild(sh);sheetEl=[bg,sh];
+  bg.onclick=closeSheet;sh.addEventListener('click',function(e){if(e.target.closest('[data-x]'))return closeSheet();if(onclick)onclick(e)});return sh;
+}
+function closeSheet(){if(sheetEl){sheetEl.forEach(function(x){x.remove()});sheetEl=null}}
+
+/* ---------- okuyucu durumu ---------- */
+var B=null,cur={ch:0,page:0},pages=1,W=0,H=0,GAP=40;
+var HL=[],BM=[];
+var col=$('#col'),vp=$('#vp');
+function prep(b){
+  b._cum=[];var t=0;
+  b.chapters.forEach(function(c){c.paras=c.text.split(/\n{2,}/).map(function(s){return s.replace(/\n/g,' ').trim()}).filter(Boolean);c.len=c.paras.join('').length+1;b._cum.push(t);t+=c.len});
+  b._total=t||1;return b;
+}
+function openBook(id){
+  var meta=LIST.filter(function(b){return b.id===id})[0];if(!meta)return;
+  var p=meta.local?idbAll().then(function(a){return a.filter(function(x){return x.id===id})[0]}):fetch('books/'+id+'.json').then(function(r){if(!r.ok)throw 0;return r.json()});
+  p.then(function(b){
+    if(!b)throw 0;B=prep(b);B.id=id;HL=LS.get('sa_hl_'+id,[]);BM=LS.get('sa_bm_'+id,[]);
+    LS.set('sa_last',id);$('#lib').hidden=true;$('#rd').hidden=false;
+    try{history.pushState({r:1},'')}catch(e){}
+    $('#rTitle').textContent=B.title;$('#head').textContent=B.title;
+    document.body.classList.add('nochrome');
+    var ps=pos(id)||{ch:0,p:0};openChapter(ps.ch||0,ps.p||0,true);
+    wake();startClock();
+  }).catch(function(){toast('Kitap açılamadı. İnternet bağlantını kontrol et.')});
+}
+function closeBook(noHist){
+  ttsStop();saveNow();hideSel();closeSheet();stopClock();
+  $('#rd').hidden=true;$('#lib').hidden=false;B=null;renderLib();
+}
+window.addEventListener('popstate',function(){if(sheetEl){closeSheet();try{history.pushState({r:1},'')}catch(e){}return}if(B)closeBook(true)});
+$('#bBack').onclick=function(){if(history.state&&history.state.r)history.back();else closeBook()};
+
+function applyType(){
+  col.style.fontFamily=FONTS[S.font];col.style.fontSize=S.size+'px';col.style.lineHeight=S.lh;col.style.textAlign=S.justify?'justify':'left';col.style.color='var(--fg)';
+}
+function paraHTML(ci,pi){
+  var t=B.chapters[ci].paras[pi];var hs=HL.filter(function(h){return h.ch===ci&&h.p===pi}).sort(function(a,b){return a.s-b.s});
+  if(!hs.length)return esc(t);var out='',i=0;
+  hs.forEach(function(h){if(h.s<i)return;out+=esc(t.slice(i,h.s))+'<mark data-h="'+h.id+'" data-c="'+h.c+'"'+(h.n?' class="hn"':'')+'>'+esc(t.slice(h.s,h.e))+'</mark>';i=h.e});
+  return out+esc(t.slice(i));
+}
+function isSb(t){return /^(\*\s*){3,}$|^-{3,}$|^_{3,}$|^✦$/.test(t)}
+function renderChapter(ci){
+  var c=B.chapters[ci];var h='<h2>'+esc(c.title)+'</h2>';
+  c.paras.forEach(function(t,i){h+=isSb(t)?'<p class="sb" data-i="'+i+'">✦ ✦ ✦</p>':'<p class="para" data-i="'+i+'">'+paraHTML(ci,i)+'</p>'});
+  col.innerHTML=h;
+}
+function layout(){
+  GAP=Math.max(40,S.margin*2);
+  W=Math.floor(vp.clientWidth-2*S.margin);H=Math.floor(vp.clientHeight-8);
+  col.style.marginLeft=S.margin+'px';col.style.width=W+'px';col.style.height=H+'px';col.style.columnWidth=W+'px';col.style.columnGap=GAP+'px';
+  applyType();
+  pages=Math.max(1,Math.round((col.scrollWidth+GAP)/(W+GAP)));
+}
+function paraPage(el){return Math.max(0,Math.min(pages-1,Math.floor((el.offsetLeft+4)/(W+GAP))))}
+function paraEls(){return col.querySelectorAll('p[data-i]')}
+function anchorPara(){
+  var els=paraEls(),a=0;for(var i=0;i<els.length;i++){if(paraPage(els[i])<=cur.page)a=+els[i].dataset.i;else break}return a;
+}
+function setPage(n,noAnim){
+  cur.page=Math.max(0,Math.min(pages-1,n));
+  if(noAnim){col.classList.add('nt')}
+  col.style.transform='translateX('+(-cur.page*(W+GAP))+'px)';
+  if(noAnim){void col.offsetWidth;col.classList.remove('nt')}
+  updateUI();saveSoon();
+}
+/* where: 'start' | 'end' | paragraf no */
+function openChapter(ci,where,noAnim){
+  ci=Math.max(0,Math.min(B.chapters.length-1,ci));cur.ch=ci;renderChapter(ci);layout();
+  var pg=0;
+  if(where==='end')pg=pages-1;
+  else if(typeof where==='number'&&where>0){var el=col.querySelector('p[data-i="'+where+'"]');if(el)pg=paraPage(el)}
+  setPage(pg,true);
+}
+function next(){if(cur.page<pages-1)setPage(cur.page+1);else if(cur.ch<B.chapters.length-1)openChapter(cur.ch+1,'start');else{toast('Kitabın sonu')}}
+function prev(){if(cur.page>0)setPage(cur.page-1);else if(cur.ch>0)openChapter(cur.ch-1,'end');else{}}
+function globalFrac(){
+  var c=B.chapters[cur.ch];var f=pages>1?cur.page/pages:0;return Math.min(1,(B._cum[cur.ch]+c.len*f)/B._total);
+}
+function updateUI(){
+  var g=globalFrac();var c=B.chapters[cur.ch];
+  $('#fl').textContent=c.title.length>34?c.title.slice(0,33)+'…':c.title;$('#fr').textContent=(cur.page+1)+' / '+pages+'  ·  %'+Math.round(g*100);
+  $('#slider').value=Math.round(g*1000);
+  var wordsLeft=(1-g)*B._total/6.2;var min=Math.round(wordsLeft/220);
+  $('#bl').textContent='Bölüm '+(cur.ch+1)+'/'+B.chapters.length+' · '+(cur.page+1)+'/'+pages;
+  $('#br').textContent='%'+Math.round(g*100)+' · '+(min>=60?Math.floor(min/60)+' sa '+(min%60)+' dk':min+' dk')+' kaldı';
+  $('#rib2').hidden=!bmOnPage().length;$('#bBm').classList.toggle('on',bmOnPage().length>0);
+}
+/* kaydet */
+var saveTm=null;
+function saveNow(){if(!B)return;var g=globalFrac();var atEnd=cur.ch===B.chapters.length-1&&cur.page>=pages-1;LS.set('sa_pos_'+B.id,{ch:cur.ch,p:anchorPara(),pct:atEnd?1:g,t:Date.now()})}
+function saveSoon(){clearTimeout(saveTm);saveTm=setTimeout(saveNow,400)}
+
+/* dokunma / kaydırma */
+var tx=0,ty=0,tt=0;
+vp.addEventListener('touchstart',function(e){var t=e.touches[0];tx=t.clientX;ty=t.clientY;tt=Date.now()},{passive:true});
+vp.addEventListener('touchend',function(e){
+  var t=e.changedTouches[0];var dx=t.clientX-tx,dy=t.clientY-ty;
+  if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5&&Date.now()-tt<700){dx<0?next():prev();vp._sw=Date.now()}
+},{passive:true});
+vp.addEventListener('click',function(e){
+  if(vp._sw&&Date.now()-vp._sw<400)return;
+  var sel=window.getSelection();if(sel&&sel.toString().length>0)return;
+  var m=e.target.closest('mark');if(m){editHL(m.dataset.h);return}
+  if(!document.body.classList.contains('nochrome')){document.body.classList.add('nochrome');return}
+  var x=e.clientX/window.innerWidth;
+  if(x<.28)prev();else if(x>.72)next();else document.body.classList.remove('nochrome');
+});
+document.addEventListener('keydown',function(e){if(!B)return;if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')prev();if(e.key==='Escape')$('#bBack').click()});
+$('#slider').addEventListener('change',function(){
+  var g=this.value/1000*B._total,ci=0;for(var i=0;i<B.chapters.length;i++)if(B._cum[i]<=g)ci=i;
+  var f=(g-B._cum[ci])/B.chapters[ci].len;openChapter(ci,'start');setPage(Math.floor(f*pages));
+});
+var rt=null;
+window.addEventListener('resize',function(){if(!B)return;clearTimeout(rt);rt=setTimeout(function(){var a=anchorPara();openChapter(cur.ch,a,true)},200)});
+
+/* ---------- menüler ---------- */
+$('#bToc').onclick=$('#bMenu').onclick=function(){
+  var h=B.chapters.map(function(c,i){return '<button class="li'+(i===cur.ch?' cur':'')+'" data-ch="'+i+'">'+esc(c.title)+'<small>'+Math.max(1,Math.round(c.len/6.2/220))+' dk okuma</small></button>'}).join('');
+  sheet('İçindekiler',h,function(e){var b=e.target.closest('[data-ch]');if(b){closeSheet();openChapter(+b.dataset.ch,'start');document.body.classList.add('nochrome')}});
+};
+$('#bSet').onclick=function(){
+  function seg(key,opts){return '<div class="seg">'+opts.map(function(o){return '<button data-k="'+key+'" data-v="'+o[0]+'" class="'+(String(S[key])===String(o[0])?'on':'')+'">'+o[1]+'</button>'}).join('')+'</div>'}
+  var h='<div class="set"><span>Tema</span><div class="th">'+[['beyaz','#fff','#222'],['sepya','#f4ecd8','#3b2f1e'],['gece','#1b2233','#dfe3ec'],['siyah','#000','#c9c9cc']].map(function(t){return '<button data-k="theme" data-v="'+t[0]+'" class="'+(S.theme===t[0]?'on':'')+'" style="background:'+t[1]+';color:'+t[2]+'">Aa</button>'}).join('')+'</div></div>'
+   +'<div class="set"><span>Yazı boyutu</span><div class="seg"><button data-d="size" data-v="-1">A−</button><button disabled style="min-width:42px">'+S.size+'</button><button data-d="size" data-v="1">A+</button></div></div>'
+   +'<div class="set"><span>Yazı tipi</span>'+seg('font',[['serif','Klasik'],['kitap','Kitap'],['sans','Sade']])+'</div>'
+   +'<div class="set"><span>Satır aralığı</span>'+seg('lh',[[1.4,'Sık'],[1.6,'Normal'],[1.85,'Geniş']])+'</div>'
+   +'<div class="set"><span>Kenar boşluğu</span>'+seg('margin',[[14,'Dar'],[22,'Normal'],[34,'Geniş']])+'</div>'
+   +'<div class="set"><span>Hizalama</span>'+seg('justify',[['true','İki yana'],['false','Sola']])+'</div>'
+   +'<div class="set"><span>Sesli okuma hızı</span>'+seg('rate',[[0.8,'Yavaş'],[1,'Normal'],[1.25,'Hızlı'],[1.5,'Çok hızlı']])+'</div>';
+  var sh=sheet('Görünüm',h,function(e){
+    var b=e.target.closest('[data-k]'),d=e.target.closest('[data-d]');
+    if(b){var k=b.dataset.k,v=b.dataset.v;S[k]=(k==='justify')?v==='true':(k==='theme'||k==='font')?v:+v;}
+    else if(d){S.size=Math.max(13,Math.min(32,S.size+ +d.dataset.v))}else return;
+    saveS();applyTheme();var a=anchorPara();openChapter(cur.ch,a,true);
+    var bd=sheetEl[1].querySelector('.bd');var st=bd.scrollTop;$('#bSet').click();sheetEl[1].querySelector('.bd').scrollTop=st;
+  });
+  sheet._noanim=1;
 };
 
-let currentStory = null;
-let currentPage = 0;
-
-function switchTab(name) {
-  document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
-  document.querySelector(`.tab-item[onclick="switchTab('${name}')"]`).classList.add('active');
-  document.getElementById(`panel-${name}`).classList.add('active');
+/* ---------- ayraç ---------- */
+function bmOnPage(){
+  var els=paraEls();return BM.filter(function(b){if(b.ch!==cur.ch)return false;var el=col.querySelector('p[data-i="'+b.p+'"]');return el&&paraPage(el)===cur.page});
 }
+$('#bBm').onclick=function(){
+  var on=bmOnPage();
+  if(on.length){BM=BM.filter(function(b){return on.indexOf(b)<0});toast('Ayraç kaldırıldı')}
+  else{var p=anchorPara(),t=B.chapters[cur.ch].paras[p]||'';BM.push({id:'b'+Date.now(),ch:cur.ch,p:p,tx:t.slice(0,90),t:Date.now()});toast('Ayraç eklendi')}
+  LS.set('sa_bm_'+B.id,BM);updateUI();
+};
 
-function openReader(id) {
-  currentStory = stories[id];
-  currentPage = 0;
-  document.getElementById('home').classList.remove('active');
-  document.getElementById('reader').classList.add('active');
-  renderBook();
+/* ---------- vurgular / notlar ---------- */
+var pend=null,selTm=null;
+document.addEventListener('selectionchange',function(){clearTimeout(selTm);selTm=setTimeout(checkSel,250)});
+function checkSel(){
+  if(!B)return;var s=window.getSelection();if(!s||s.isCollapsed||!s.rangeCount){hideSel();return}
+  var r=s.getRangeAt(0);var pe=r.startContainer.nodeType===1?r.startContainer:r.startContainer.parentElement;pe=pe&&pe.closest&&pe.closest('p.para');
+  if(!pe||!col.contains(pe)){hideSel();return}
+  var pre=document.createRange();pre.selectNodeContents(pe);pre.setEnd(r.startContainer,r.startOffset);var st=pre.toString().length;
+  var ee=r.endContainer.nodeType===1?r.endContainer:r.endContainer.parentElement;ee=ee&&ee.closest&&ee.closest('p.para');
+  var en;if(ee===pe){var p2=document.createRange();p2.selectNodeContents(pe);p2.setEnd(r.endContainer,r.endOffset);en=p2.toString().length}else en=pe.textContent.length;
+  if(en-st<2){hideSel();return}
+  var pi=+pe.dataset.i;pend={ch:cur.ch,p:pi,s:st,e:en,tx:B.chapters[cur.ch].paras[pi].slice(st,en)};
+  var bar=$('#selbar');bar.innerHTML='<button class="dot" data-c="y" style="background:#f3c969"></button><button class="dot" data-c="g" style="background:#9ad9a0"></button><button class="dot" data-c="b" style="background:#9cc7f2"></button><button class="dot" data-c="p" style="background:#f2a6c3"></button><span class="sep"></span><button data-a="note">Not</button><button data-a="copy">Kopyala</button><button data-a="def">Anlamı</button><button data-a="tts">Dinle</button>';
+  bar.hidden=false;
 }
-
-function goHome() {
-  document.getElementById('reader').classList.remove('active');
-  document.getElementById('home').classList.add('active');
+function hideSel(){var b=$('#selbar');if(b)b.hidden=true;pend=null}
+$('#selbar').addEventListener('mousedown',function(e){e.preventDefault()});
+$('#selbar').addEventListener('touchstart',function(e){e.preventDefault()},{passive:false});
+function bind(el,fn){el.addEventListener('click',fn);el.addEventListener('touchend',function(e){e.preventDefault();fn(e)})}
+bind($('#selbar'),function(e){
+  var b=e.target.closest('button');if(!b||!pend)return;var P=pend;
+  if(b.dataset.c){addHL(P,b.dataset.c,'')}
+  else if(b.dataset.a==='copy'){try{navigator.clipboard.writeText(P.tx);toast('Kopyalandı')}catch(x){}clearSel()}
+  else if(b.dataset.a==='def'){var w=P.tx.trim().split(/\s+/)[0].replace(/[^\p{L}]/gu,'');window.open('https://www.google.com/search?q='+encodeURIComponent(w+' ne demek anlamı'),'_blank','noopener');clearSel()}
+  else if(b.dataset.a==='tts'){clearSel();ttsStart(P.ch,P.p)}
+  else if(b.dataset.a==='note'){noteSheet(P,null)}
+});
+function clearSel(){var s=window.getSelection();if(s)s.removeAllRanges();hideSel()}
+function addHL(P,c,n){
+  HL=HL.filter(function(h){return !(h.ch===P.ch&&h.p===P.p&&h.s<P.e&&h.e>P.s)});
+  var h={id:'h'+Date.now(),ch:P.ch,p:P.p,s:P.s,e:P.e,c:c,n:n||'',tx:P.tx,t:Date.now()};HL.push(h);LS.set('sa_hl_'+B.id,HL);
+  clearSel();refreshPara(P.ch,P.p);return h;
 }
-
-function totalPages() {
-  return currentStory.pages.length + 1;
+function refreshPara(ci,pi){
+  if(ci!==cur.ch)return;var el=col.querySelector('p[data-i="'+pi+'"]');if(!el)return;el.innerHTML=paraHTML(ci,pi);
 }
-
-function renderBook(direction) {
-  const book = document.getElementById('book');
-  const total = totalPages();
-  const existing = book.querySelectorAll('.page');
-
-  const allPages = currentStory.pages.map((text, i) => ({
-    isSource: false,
-    html: `${i === 0 ? `<div class="eyebrow">${currentStory.title}</div><h3>Bölüm ${i + 1}</h3>` : ''}<p>${text}</p><span class="page-num">${i + 1} / ${total}</span>`
-  }));
-  const srcList = currentStory.sources.map(s => `<li style="margin-bottom:8px;">${s}</li>`).join('');
-  allPages.push({
-    isSource: true,
-    html: `<div class="eyebrow">${currentStory.title}</div><h3>Kaynakça</h3><ul>${srcList}</ul><span class="page-num">${total} / ${total}</span>`
+function noteSheet(P,h){
+  var sh=sheet(h?'Notu düzenle':'Not ekle','<div class="hint" style="margin-top:0">“'+esc((P.tx||'').slice(0,160))+'”</div><textarea id="nt" rows="4" placeholder="Notun…">'+esc(h?h.n:'')+'</textarea><div class="row"><button class="btn" id="nsave">Kaydet</button>'+(h?'<button class="btn g" id="ndel">Vurguyu sil</button>':'')+'</div>');
+  var ta=$('#nt',sh);setTimeout(function(){ta.focus()},100);
+  $('#nsave',sh).onclick=function(){var n=ta.value.trim();if(h){h.n=n;LS.set('sa_hl_'+B.id,HL);refreshPara(h.ch,h.p)}else addHL(P,'y',n);closeSheet()};
+  if(h)$('#ndel',sh).onclick=function(){delHL(h.id);closeSheet()};
+}
+function delHL(id){var h=HL.filter(function(x){return x.id===id})[0];HL=HL.filter(function(x){return x.id!==id});LS.set('sa_hl_'+B.id,HL);if(h)refreshPara(h.ch,h.p)}
+function editHL(id){
+  var h=HL.filter(function(x){return x.id===id})[0];if(!h)return;
+  var sh=sheet('Vurgu','<div class="li" style="border:0"><q>'+esc(h.tx)+'</q>'+(h.n?'<small>Notun: '+esc(h.n)+'</small>':'')+'</div><div class="row"><button class="btn" data-a="n">'+(h.n?'Notu düzenle':'Not ekle')+'</button><button class="btn g" data-a="d">Sil</button></div>',function(e){var a=e.target.closest('[data-a]');if(!a)return;if(a.dataset.a==='d'){delHL(id);closeSheet()}else noteSheet(h,h)});
+}
+$('#bNotes').onclick=function(){
+  var all=[];HL.forEach(function(h){all.push({k:'h',o:h})});BM.forEach(function(b){all.push({k:'b',o:b})});
+  all.sort(function(a,b){return a.o.ch-b.o.ch||a.o.p-b.o.p||(a.k==='h'?a.o.s:0)-(b.k==='h'?b.o.s:0)});
+  var h=all.length?all.map(function(x){var o=x.o;return '<button class="li" data-g="'+o.ch+':'+o.p+'">'+(x.k==='h'?'<q style="border-color:'+({y:'#f3c969',g:'#9ad9a0',b:'#9cc7f2',p:'#f2a6c3'}[o.c])+'">'+esc(o.tx)+'</q>'+(o.n?'✎ '+esc(o.n):''):'🔖 '+esc(o.tx)+'…')+'<small>'+esc(B.chapters[o.ch].title)+'</small></button>'}).join('')+'<div class="row"><button class="btn" data-a="exp">Notları paylaş / kopyala</button></div>':'<div class="empty">Henüz vurgu, not ya da ayraç yok.<br>Bir cümleyi basılı tutup seç, renk veya Not’a dokun.</div>';
+  sheet('Notlarım ('+all.length+')',h,function(e){
+    var g=e.target.closest('[data-g]');if(g){var a=g.dataset.g.split(':');closeSheet();openChapter(+a[0],+a[1]);document.body.classList.add('nochrome');return}
+    if(e.target.closest('[data-a=exp]')){var t=B.title+' — '+(B.author||'')+'\n\n';all.forEach(function(x){var o=x.o;t+=(x.k==='h'?'“'+o.tx+'”'+(o.n?'\n   Not: '+o.n:''):'Ayraç: '+o.tx+'…')+'\n   ('+B.chapters[o.ch].title+')\n\n'});
+      if(navigator.share){navigator.share({title:B.title+' notlarım',text:t}).catch(function(){})}else{try{navigator.clipboard.writeText(t);toast('Kopyalandı')}catch(x){}}}
   });
+};
 
-  if (existing.length === 0) {
-    allPages.forEach((p, i) => {
-      const pageEl = document.createElement('div');
-      pageEl.className = 'page';
-      pageEl.style.zIndex = total - i;
-      pageEl.innerHTML = p.html;
-      if (i < currentPage) pageEl.classList.add('flipped');
-      book.appendChild(pageEl);
-    });
-  } else {
-    existing.forEach((pageEl, i) => {
-      pageEl.innerHTML = allPages[i].html;
-      pageEl.classList.remove('turning-fwd', 'turning-back');
-      if (direction === 'fwd' && i === currentPage - 1) {
-        pageEl.classList.add('turning-fwd');
-        pageEl.addEventListener('animationend', () => pageEl.classList.add('flipped'), { once: true });
-      } else if (direction === 'back' && i === currentPage) {
-        pageEl.classList.add('turning-back');
-        pageEl.addEventListener('animationend', () => pageEl.classList.remove('flipped'), { once: true });
-      } else {
-        pageEl.classList.toggle('flipped', i < currentPage);
-      }
-    });
-  }
+/* ---------- kitapta ara ---------- */
+$('#bSearch').onclick=function(){
+  var sh=sheet('Kitapta ara','<input class="inp" id="sq" type="search" placeholder="Kelime veya cümle…" autocomplete="off"><div id="sr" style="margin-top:8px"></div>');
+  var inp=$('#sq',sh);setTimeout(function(){inp.focus()},120);var tm=null;
+  inp.oninput=function(){clearTimeout(tm);tm=setTimeout(function(){
+    var q=inp.value.trim().toLocaleLowerCase('tr');var out=[];
+    if(q.length>=2){B.chapters.forEach(function(c,ci){c.paras.forEach(function(p,pi){var i=p.toLocaleLowerCase('tr').indexOf(q);if(i>=0&&out.length<80){var a=Math.max(0,i-40);out.push('<button class="li" data-g="'+ci+':'+pi+'">…'+esc(p.slice(a,i))+'<b style="color:var(--acc)">'+esc(p.slice(i,i+q.length))+'</b>'+esc(p.slice(i+q.length,i+q.length+70))+'…<small>'+esc(c.title)+'</small></button>')}})})}
+    $('#sr',sh).innerHTML=out.length?out.join(''):(q.length>=2?'<div class="empty">Sonuç yok.</div>':'');
+  },250)};
+  sh.addEventListener('click',function(e){var g=e.target.closest('[data-g]');if(g){var a=g.dataset.g.split(':');closeSheet();openChapter(+a[0],+a[1]);document.body.classList.add('nochrome')}});
+};
 
-  document.getElementById('pageIndicator').textContent = `${currentPage + 1} / ${total}`;
-  document.getElementById('prevBtn').disabled = currentPage === 0;
-  document.getElementById('nextBtn').disabled = currentPage === total - 1;
+/* ---------- sesli okuma ---------- */
+var tts={on:false,paused:false,ch:0,p:0,rate:1,id:0};
+function ttsStart(ci,pi){
+  if(!('speechSynthesis' in window)){toast('Bu cihaz sesli okumayı desteklemiyor');return}
+  tts.on=true;tts.paused=false;tts.ch=ci;tts.p=pi;tts.id++;speechSynthesis.cancel();
+  $('#ttsbar').hidden=false;$('#tPlay').textContent='⏸';$('#tRate').textContent=S.rate+'×';document.body.classList.add('nochrome');speakNow();
 }
-
-function nextPage() {
-  if (currentPage < totalPages() - 1) {
-    currentPage++;
-    renderBook('fwd');
-  }
+function ttsStop(){tts.on=false;tts.id++;try{speechSynthesis.cancel()}catch(e){}$('#ttsbar').hidden=true;var t=col.querySelector('.tts');if(t)t.classList.remove('tts');$('#bTts').classList.remove('on')}
+function chunks(t){var out=[],s=t.match(/[^.!?…]+[.!?…]*\s*/g)||[t],buf='';s.forEach(function(x){if((buf+x).length>200&&buf){out.push(buf);buf=x}else buf+=x});if(buf)out.push(buf);return out}
+function speakNow(){
+  if(!tts.on||!B)return;var myid=tts.id;var c=B.chapters[tts.ch];
+  if(tts.p>=c.paras.length){if(tts.ch+1<B.chapters.length){tts.ch++;tts.p=0;return speakNow()}else{ttsStop();toast('Kitap bitti');return}}
+  var txt=c.paras[tts.p];if(isSb(txt)){tts.p++;return speakNow()}
+  if(cur.ch!==tts.ch)openChapter(tts.ch,tts.p);
+  var el=col.querySelector('p[data-i="'+tts.p+'"]');
+  var old=col.querySelector('.tts');if(old)old.classList.remove('tts');
+  if(el){el.classList.add('tts');var pg=paraPage(el);if(pg!==cur.page)setPage(pg)}
+  $('#tInfo').textContent=c.title;$('#bTts').classList.add('on');
+  var parts=chunks(txt),i=0;
+  (function one(){
+    if(!tts.on||tts.id!==myid)return;if(i>=parts.length){tts.p++;return speakNow()}
+    var u=new SpeechSynthesisUtterance(parts[i++]);u.lang='tr-TR';u.rate=S.rate;
+    var vs=speechSynthesis.getVoices().filter(function(v){return /^tr/i.test(v.lang)});
+    if(vs.length){var best=vs.filter(function(v){return /premium|enhanced|natural|yelda|filiz/i.test(v.name)})[0];u.voice=best||vs[0]}
+    u.onend=one;u.onerror=function(){if(tts.id===myid&&tts.on)setTimeout(one,50)};
+    speechSynthesis.speak(u);
+  })();
 }
+$('#bTts').onclick=function(){if(tts.on){ttsStop();return}ttsStart(cur.ch,anchorPara());};
+$('#tStop').onclick=ttsStop;
+$('#tPlay').onclick=function(){if(tts.paused){tts.paused=false;speechSynthesis.resume();this.textContent='⏸'}else{tts.paused=true;speechSynthesis.pause();this.textContent='▶'}};
+function ttsJump(d){tts.p=Math.max(0,tts.p+d);tts.id++;tts.paused=false;speechSynthesis.cancel();$('#tPlay').textContent='⏸';speakNow()}
+$('#tNext').onclick=function(){ttsJump(1)};$('#tPrev').onclick=function(){ttsJump(-1)};
+$('#tRate').onclick=function(){var r=[0.8,1,1.25,1.5],i=r.indexOf(S.rate);S.rate=r[(i+1)%r.length];saveS();this.textContent=S.rate+'×';ttsJump(0)};
 
-function prevPage() {
-  if (currentPage > 0) {
-    currentPage--;
-    renderBook('back');
-  }
-}
+/* ---------- okuma süresi ---------- */
+var clock=null,lastAct=Date.now();
+['touchstart','click','keydown'].forEach(function(ev){document.addEventListener(ev,function(){lastAct=Date.now()},{passive:true})});
+function startClock(){stopClock();clock=setInterval(function(){if(document.hidden||!B)return;if(Date.now()-lastAct>90000&&!tts.on)return;var st=LS.get('sa_stats',{}),t=today();st[t]=(st[t]||0)+10;LS.set('sa_stats',st)},10000)}
+function stopClock(){if(clock){clearInterval(clock);clock=null}}
+var wl=null;function wake(){try{if(navigator.wakeLock)navigator.wakeLock.request('screen').then(function(l){wl=l}).catch(function(){})}catch(e){}}
+document.addEventListener('visibilitychange',function(){if(document.hidden)saveNow();else if(B)wake()});
+window.addEventListener('pagehide',saveNow);
 
-let touchStartX = 0;
-let touchStartY = 0;
-const bookWrapEl = document.querySelector('.book-wrap');
-bookWrapEl.addEventListener('touchstart', (e) => {
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-}, { passive: true });
-bookWrapEl.addEventListener('touchend', (e) => {
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  const dy = e.changedTouches[0].clientY - touchStartY;
-  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
-    if (dx < 0) nextPage(); else prevPage();
-  }
-}, { passive: true });
+/* ---------- başlangıç ---------- */
+idbOpen().then(loadList);
+if('serviceWorker' in navigator&&/^https:|localhost/.test(location.protocol+location.hostname)){navigator.serviceWorker.register('sw.js').catch(function(){})}
+window.__SA={get B(){return B},get cur(){return cur},get pages(){return pages},next:next,prev:prev,openBook:openBook,S:S};
+})();
 </script>
-
 </body>
 </html>
