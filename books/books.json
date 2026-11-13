@@ -1,6 +1,17 @@
 {
  "kitaplar": [
   {
+   "id": "kotulugun-okulu",
+   "title": "Kötülüğün Okulu",
+   "alt": "Bir İnsan Silah Olarak Yetiştirilebilir mi?",
+   "author": "",
+   "kelime": 12069,
+   "renk": [
+    "#3b3f45",
+    "#0d0e10"
+   ]
+  },
+  {
    "id": "yirmi-birinci-kapi",
    "title": "Yirmi Birinci Kapı",
    "alt": "Bir Kapalıçarşı Romanı",
