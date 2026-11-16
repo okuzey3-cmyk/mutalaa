@@ -1,6 +1,17 @@
 {
  "kitaplar": [
   {
+   "id": "mektup-ve-getiren",
+   "title": "Mektup ve Mektubu Getiren",
+   "alt": "Kur'an Neden Peygamber'in Sünnetiyle Birlikte Okunur?",
+   "author": "",
+   "kelime": 8284,
+   "renk": [
+    "#1f4d3a",
+    "#0a1d15"
+   ]
+  },
+  {
    "id": "kotulugun-okulu",
    "title": "Kötülüğün Okulu",
    "alt": "Bir İnsan Silah Olarak Yetiştirilebilir mi?",
