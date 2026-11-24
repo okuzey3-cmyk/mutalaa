@@ -1,6 +1,17 @@
 {
  "kitaplar": [
   {
+   "id": "garajdan-dunyaya",
+   "title": "Garajdan Dünyaya",
+   "alt": "Küçük Başlayıp Büyük Düşünen Girişimcilerin Hikâyeleri",
+   "author": "",
+   "kelime": 7453,
+   "renk": [
+    "#b5651d",
+    "#3a1d08"
+   ]
+  },
+  {
    "id": "mektup-ve-getiren",
    "title": "Mektup ve Mektubu Getiren",
    "alt": "Kur'an Neden Peygamber'in Sünnetiyle Birlikte Okunur?",
